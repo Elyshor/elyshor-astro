@@ -1,17 +1,24 @@
 ---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LogoHero from '../components/LogoHero.astro';
+import MusicCard from '../components/MusicCard.astro';
 
+const posts = (await getCollection('music', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 4);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Elyshor">
+  <LogoHero variant="home" text="Musik, WoW, Technik und kleine Projekte." />
+
+  <section class="section">
+    <div class="section__header">
+      <p class="eyebrow">Neuste Beiträge</p>
+      <h1>Frische Musiknotizen</h1>
+    </div>
+    <div class="card-grid">
+      {posts.map((post) => <MusicCard post={post} />)}
+    </div>
+  </section>
+</BaseLayout>

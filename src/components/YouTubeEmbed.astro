@@ -1,0 +1,17 @@
+---
+import MediaConsent from './MediaConsent.astro';
+
+interface Props {
+  url: string;
+  title: string;
+}
+
+const { url, title } = Astro.props;
+const parsed = new URL(url);
+const id = parsed.hostname.includes('youtu.be')
+  ? parsed.pathname.replace('/', '')
+  : parsed.searchParams.get('v');
+const src = `https://www.youtube-nocookie.com/embed/${id}`;
+---
+
+<MediaConsent provider="YouTube" title={`YouTube: ${title}`} src={src} />

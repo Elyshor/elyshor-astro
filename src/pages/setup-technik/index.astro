@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LogoHero from '../../components/LogoHero.astro';
+
+const areas = [
+  'PC & Hardware',
+  'Audio',
+  'Sim Racing',
+  'Website / Tools',
+  'Kleine Projekte',
+];
+---
+
+<BaseLayout title="Setup & Technik · Elyshor">
+  <LogoHero variant="page" kicker="Setup & Technik" text="Notizen zu Hardware, Tools und Bastelprojekten." />
+
+  <section class="hub-grid" aria-label="Themen">
+    {areas.map((area) => (
+      <article class="hub-card">
+        <h1>{area}</h1>
+        <p>Platzhalter für spätere Inhalte.</p>
+      </article>
+    ))}
+  </section>
+</BaseLayout>

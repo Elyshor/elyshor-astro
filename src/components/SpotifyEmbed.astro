@@ -1,0 +1,14 @@
+---
+import MediaConsent from './MediaConsent.astro';
+
+interface Props {
+  url: string;
+  title: string;
+}
+
+const { url, title } = Astro.props;
+const id = new URL(url).pathname.split('/').filter(Boolean).pop();
+const src = `https://open.spotify.com/embed/track/${id}`;
+---
+
+<MediaConsent provider="Spotify" title={`Spotify: ${title}`} src={src} />

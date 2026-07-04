@@ -1,0 +1,35 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'music'>;
+}
+
+const { post } = Astro.props;
+const date = new Intl.DateTimeFormat('de-DE', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+}).format(post.data.date);
+const description = `${post.data.artist} · ${post.data.track}${post.data.label ? ` · ${post.data.label}` : ''}`;
+---
+
+<article class="music-card">
+  <a class="music-card__cover" href={`/musik/${post.id}/`} aria-label={`${post.data.title} öffnen`}>
+    {post.data.cover ? <img src={post.data.cover} alt="" loading="lazy" /> : <span>{post.data.track}</span>}
+  </a>
+  <div class="music-card__body">
+    <div>
+      <time datetime={post.data.date.toISOString()}>{date}</time>
+      <h2><a href={`/musik/${post.id}/`}>{post.data.title}</a></h2>
+      <p>{description}</p>
+    </div>
+    <ul class="tag-list tag-list--compact" aria-label="Tags">
+      {post.data.tags.slice(0, 5).map((tag) => <li>{tag}</li>)}
+    </ul>
+    <div class="button-row">
+      <a class="button button--ghost" href={post.data.spotify} rel="noreferrer">Spotify</a>
+      {post.data.youtube && <a class="button button--ghost" href={post.data.youtube} rel="noreferrer">YouTube</a>}
+    </div>
+  </div>
+</article>

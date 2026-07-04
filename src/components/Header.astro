@@ -1,0 +1,30 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+  logoVariant?: 'elyshor' | 'powerpuffpeons';
+}
+
+const { logoVariant = 'elyshor' } = Astro.props;
+const navItems = [
+  { href: '/musik/', label: 'Musik' },
+  { href: '/wow/powerpuffpeons/', label: 'WoW', sublabel: 'PowerPuffPeons' },
+  { href: '/setup-technik/', label: 'Setup & Technik' },
+  { href: '/links/', label: 'Links' },
+];
+---
+
+<header class="site-header">
+  <a class="header-mark" href="/" aria-label="Elyshor Startseite">
+    {logoVariant === 'powerpuffpeons' ? 'PPP' : 'ELY'}
+  </a>
+  <nav class="main-nav" aria-label="Hauptnavigation">
+    {navItems.map((item) => (
+      <a href={item.href}>
+        <span>{item.label}</span>
+        {item.sublabel && <small>{item.sublabel}</small>}
+      </a>
+    ))}
+  </nav>
+  <ThemeToggle />
+</header>

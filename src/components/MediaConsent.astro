@@ -1,0 +1,58 @@
+---
+interface Props {
+  title: string;
+  provider: 'Spotify' | 'YouTube';
+  src: string;
+}
+
+const { title, provider, src } = Astro.props;
+---
+
+<div class="media-consent" data-media-consent data-src={src} data-title={title}>
+  <div class="media-consent__placeholder">
+    <p>Externe Medien laden</p>
+    <span>{provider} wird erst nach deiner Zustimmung eingebettet.</span>
+    <button type="button" data-load-media>{provider} laden</button>
+  </div>
+</div>
+
+<script>
+  const consentKey = 'ely_media_consent';
+
+  function loadConsentEmbed(container: HTMLElement) {
+    if (container.querySelector('iframe')) return;
+
+    const iframe = document.createElement('iframe');
+    iframe.src = container.dataset.src || '';
+    iframe.title = container.dataset.title || 'Externes Medium';
+    iframe.loading = 'lazy';
+    iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+    iframe.allowFullscreen = true;
+    container.replaceChildren(iframe);
+    container.classList.add('media-consent--loaded');
+  }
+
+  function loadConsentedMedia() {
+    document.querySelectorAll<HTMLElement>('[data-media-consent]').forEach((container) => {
+      if (localStorage.getItem(consentKey) === 'true') {
+        loadConsentEmbed(container);
+      }
+    });
+  }
+
+  loadConsentedMedia();
+
+  document.addEventListener('click', (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-load-media]');
+    if (!button) return;
+
+    localStorage.setItem(consentKey, 'true');
+    document.querySelectorAll<HTMLElement>('[data-media-consent]').forEach(loadConsentEmbed);
+  });
+
+  document.querySelectorAll<HTMLElement>('[data-media-consent]').forEach((container) => {
+    if (localStorage.getItem(consentKey) === 'true') {
+      loadConsentEmbed(container);
+    }
+  });
+</script>

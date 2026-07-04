@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LogoHero from '../../components/LogoHero.astro';
+
+const links = ['Musikprofile', 'Streams', 'Socials', 'Tools'];
+---
+
+<BaseLayout title="Links · Elyshor">
+  <LogoHero variant="page" kicker="Links" text="Ein ruhiger Hub für wichtige Verweise." />
+
+  <section class="section section--narrow">
+    <div class="link-list">
+      {links.map((link) => (
+        <a href="#" aria-disabled="true">
+          <span>{link}</span>
+          <small>Platzhalter</small>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

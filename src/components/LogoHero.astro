@@ -1,0 +1,23 @@
+---
+interface Props {
+  variant?: 'home' | 'page' | 'powerpuffpeons';
+  kicker?: string;
+  text?: string;
+}
+
+const { variant = 'page', kicker, text } = Astro.props;
+const isPower = variant === 'powerpuffpeons';
+const className = `logo-hero logo-hero--${variant}`;
+---
+
+<section class={className}>
+  {kicker && <p class="eyebrow">{kicker}</p>}
+  <div class="logo-hero__mark" aria-label={isPower ? 'PowerPuffPeons' : 'Elyshor'}>
+    {isPower ? (
+      <img src="/images/powerpuff-peons-logo.webp" alt="PowerPuffPeons" />
+    ) : (
+      <img src="/images/elyshor-logo.webp" alt="Elyshor" />
+    )}
+  </div>
+  {text && <p>{text}</p>}
+</section>
