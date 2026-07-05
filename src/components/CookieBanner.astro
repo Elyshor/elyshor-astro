@@ -1,0 +1,57 @@
+<div class="cookie-banner" data-cookie-banner hidden>
+  <div class="cookie-banner__copy">
+    <strong>Cookie- und Medienauswahl</strong>
+    <p>
+      Elyshor nutzt notwendige lokale Speicherung für diese Auswahl. Spotify- und YouTube-Embeds laden wir erst nach Zustimmung.{' '}
+      <a href="/datenschutz/">Datenschutz</a> · <a href="/impressum/">Impressum</a>
+    </p>
+    <label class="cookie-banner__choice">
+      <input type="checkbox" data-consent-media />
+      <span>Externe Medien von Spotify und YouTube erlauben</span>
+    </label>
+  </div>
+  <div class="cookie-banner__actions">
+    <button type="button" data-consent-save>Auswahl</button>
+    <button type="button" data-consent-necessary>Nur notwendige</button>
+    <button type="button" data-consent-reject>Ablehnen</button>
+    <button type="button" data-consent-accept>Alle akzeptieren</button>
+  </div>
+</div>
+
+<script>
+  const consentKey = 'ely_consent';
+  const banner = document.querySelector<HTMLElement>('[data-cookie-banner]');
+  const mediaChoice = document.querySelector<HTMLInputElement>('[data-consent-media]');
+
+  function readConsent() {
+    try {
+      return JSON.parse(localStorage.getItem(consentKey) || 'null');
+    } catch {
+      return null;
+    }
+  }
+
+  function saveConsent(externalMedia: boolean) {
+    localStorage.setItem(consentKey, JSON.stringify({
+      necessary: true,
+      externalMedia,
+      decidedAt: new Date().toISOString(),
+    }));
+    if (banner) banner.hidden = true;
+    document.dispatchEvent(new CustomEvent('ely-consent-updated'));
+  }
+
+  const existingConsent = readConsent();
+  if (!existingConsent && banner) {
+    banner.hidden = false;
+  }
+
+  if (mediaChoice && existingConsent) {
+    mediaChoice.checked = existingConsent.externalMedia === true;
+  }
+
+  document.querySelector('[data-consent-accept]')?.addEventListener('click', () => saveConsent(true));
+  document.querySelector('[data-consent-necessary]')?.addEventListener('click', () => saveConsent(false));
+  document.querySelector('[data-consent-reject]')?.addEventListener('click', () => saveConsent(false));
+  document.querySelector('[data-consent-save]')?.addEventListener('click', () => saveConsent(mediaChoice?.checked === true));
+</script>

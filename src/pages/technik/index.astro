@@ -9,13 +9,9 @@ const posts = (await getCollection('tech', ({ data }) => !data.draft))
 ---
 
 <BaseLayout title="Technik · Elyshor" description="Technikbereich von Elyshor mit Platz fuer Hardware, Tools und Website-Notizen.">
-  <LogoHero variant="page" kicker="Technik" text="Notizen zu Hardware, Tools, Website-Kram und allem, was noch ausprobiert wird." />
+  <LogoHero variant="page" />
 
   <section class="section">
-    <div class="section__header">
-      <h1>Technikbeitraege</h1>
-      <p>Hardware, Website, Tools und kleine Bastelprojekte.</p>
-    </div>
     <div class="post-card-grid">
       {posts.map((post) => (
         <PostCard
@@ -25,6 +21,8 @@ const posts = (await getCollection('tech', ({ data }) => !data.draft))
           pubDate={post.data.pubDate}
           tags={post.data.tags}
           heroImage={post.data.heroImage}
+          section="Technik"
+          sectionHref="/technik/"
         />
       ))}
     </div>

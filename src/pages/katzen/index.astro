@@ -9,13 +9,9 @@ const posts = (await getCollection('cats', ({ data }) => !data.draft))
 ---
 
 <BaseLayout title="Katzen · Elyshor" description="Katzenbereich von Elyshor mit Platz fuer Fotos, kleine Geschichten und Updates.">
-  <LogoHero variant="page" kicker="Katzen" text="Ein eigener kleiner Bereich fuer Katzenfotos, Geschichten und spaetere Updates." />
+  <LogoHero variant="page" />
 
   <section class="section">
-    <div class="section__header">
-      <h1>Katzenbeitraege</h1>
-      <p>Momente, Bilderideen und kurze Notizen.</p>
-    </div>
     <div class="post-card-grid">
       {posts.map((post) => (
         <PostCard
@@ -25,6 +21,8 @@ const posts = (await getCollection('cats', ({ data }) => !data.draft))
           pubDate={post.data.pubDate}
           tags={post.data.tags}
           heroImage={post.data.heroImage}
+          section="Katzen"
+          sectionHref="/katzen/"
         />
       ))}
     </div>

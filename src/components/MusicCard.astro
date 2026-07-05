@@ -27,7 +27,9 @@ const tags = ['Musik', ...post.data.tags.filter((tag) => tag.toLowerCase() !== '
       <p>{description}</p>
     </div>
     <ul class="tag-list tag-list--compact" aria-label="Tags">
-      {tags.map((tag) => <li>{tag}</li>)}
+      {tags.map((tag) => (
+        <li>{tag.toLowerCase() === 'musik' ? <a href="/musik/">{tag}</a> : tag}</li>
+      ))}
     </ul>
     <div class="button-row">
       {post.data.spotifyUrl && <a class="button button--ghost button--spotify" href={post.data.spotifyUrl} rel="noreferrer">Spotify</a>}

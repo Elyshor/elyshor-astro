@@ -17,7 +17,19 @@ const { title, provider, src } = Astro.props;
 </div>
 
 <script>
-  const consentKey = 'ely_media_consent';
+  const legacyConsentKey = 'ely_media_consent';
+  const consentKey = 'ely_consent';
+
+  function hasExternalMediaConsent() {
+    if (localStorage.getItem(legacyConsentKey) === 'true') return true;
+
+    try {
+      const consent = JSON.parse(localStorage.getItem(consentKey) || '{}');
+      return consent.externalMedia === true;
+    } catch {
+      return false;
+    }
+  }
 
   function loadConsentEmbed(container: HTMLElement) {
     if (container.querySelector('iframe')) return;
@@ -34,7 +46,7 @@ const { title, provider, src } = Astro.props;
 
   function loadConsentedMedia() {
     document.querySelectorAll<HTMLElement>('[data-media-consent]').forEach((container) => {
-      if (localStorage.getItem(consentKey) === 'true') {
+      if (hasExternalMediaConsent()) {
         loadConsentEmbed(container);
       }
     });
@@ -46,13 +58,20 @@ const { title, provider, src } = Astro.props;
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-load-media]');
     if (!button) return;
 
-    localStorage.setItem(consentKey, 'true');
+    localStorage.setItem(consentKey, JSON.stringify({
+      necessary: true,
+      externalMedia: true,
+      decidedAt: new Date().toISOString(),
+    }));
     document.querySelectorAll<HTMLElement>('[data-media-consent]').forEach(loadConsentEmbed);
+    document.dispatchEvent(new CustomEvent('ely-consent-updated'));
   });
 
   document.querySelectorAll<HTMLElement>('[data-media-consent]').forEach((container) => {
-    if (localStorage.getItem(consentKey) === 'true') {
+    if (hasExternalMediaConsent()) {
       loadConsentEmbed(container);
     }
   });
+
+  document.addEventListener('ely-consent-updated', loadConsentedMedia);
 </script>

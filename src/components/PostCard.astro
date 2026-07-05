@@ -6,18 +6,37 @@ interface Props {
   pubDate: Date;
   tags?: string[];
   heroImage?: string;
+  section?: string;
+  sectionHref?: string;
+  meta?: string;
+  spotifyUrl?: string;
+  youtubeUrl?: string;
 }
 
-const { href, title, description, pubDate, tags = [], heroImage } = Astro.props;
+const {
+  href,
+  title,
+  description,
+  pubDate,
+  tags = [],
+  heroImage,
+  section,
+  sectionHref,
+  meta,
+  spotifyUrl,
+  youtubeUrl,
+} = Astro.props;
 const formattedDate = new Intl.DateTimeFormat('de-DE', {
   day: '2-digit',
   month: '2-digit',
   year: 'numeric',
 }).format(pubDate);
 const cardImage = heroImage?.startsWith('/assets/img/') ? heroImage : undefined;
+const displayTags = section ? [section, ...tags.filter((tag) => tag.toLowerCase() !== section.toLowerCase())] : tags;
+const fallbackLabel = section?.slice(0, 2) ?? title.slice(0, 1);
 ---
 
-<article class="post-card elyshor-post-card">
+<article class:list={['post-card elyshor-post-card', { 'post-card--has-image': cardImage }]}>
   {cardImage && (
     <a class="post-card__image" href={href} aria-label={`${title} öffnen`}>
       <img src={cardImage} alt="" loading="lazy" />
@@ -26,11 +45,19 @@ const cardImage = heroImage?.startsWith('/assets/img/') ? heroImage : undefined;
   <div class="post-card__body">
     <time datetime={pubDate.toISOString()}>{formattedDate}</time>
     <h2><a href={href}>{title}</a></h2>
+    {meta && <p class="post-card__meta">{meta}</p>}
     <p>{description}</p>
-    {tags.length > 0 && (
+    {displayTags.length > 0 && (
       <ul class="tag-list tag-list--compact" aria-label="Tags">
-        {tags.slice(0, 5).map((tag) => <li>{tag}</li>)}
+        {displayTags.slice(0, 5).map((tag) => (
+          <li>{sectionHref && tag === section ? <a href={sectionHref}>{tag}</a> : tag}</li>
+        ))}
       </ul>
     )}
+    <div class="button-row">
+      {spotifyUrl && <a class="button button--spotify" href={spotifyUrl} rel="noreferrer">Spotify</a>}
+      {youtubeUrl && <a class="button button--youtube" href={youtubeUrl} rel="noreferrer">YouTube</a>}
+      <a class="button button--read" href={href}>Beitrag lesen</a>
+    </div>
   </div>
 </article>

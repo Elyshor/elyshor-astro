@@ -60,6 +60,12 @@ const navItems = [
     mobileMenu.classList.toggle('is-open', open);
   }
 
+  function updateMobileMenuVisibility() {
+    const visible = window.scrollY >= 72;
+    document.documentElement.classList.toggle('is-mobile-menu-visible', visible);
+    if (!visible) setMobileMenu(false);
+  }
+
   menuToggle?.addEventListener('click', () => {
     setMobileMenu(menuToggle.getAttribute('aria-expanded') !== 'true');
   });
@@ -71,4 +77,7 @@ const navItems = [
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') setMobileMenu(false);
   });
+
+  updateMobileMenuVisibility();
+  window.addEventListener('scroll', updateMobileMenuVisibility, { passive: true });
 </script>

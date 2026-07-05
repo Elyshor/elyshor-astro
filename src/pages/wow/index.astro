@@ -9,13 +9,9 @@ const posts = (await getCollection('wow', ({ data }) => !data.draft))
 ---
 
 <BaseLayout title="WoW · Elyshor" description="World-of-Warcraft-Bereich von Elyshor mit Gilde, Notizen und Platz fuer Builds.">
-  <LogoHero variant="page" kicker="WoW" text="Ein ruhiger Bereich fuer World of Warcraft, Gildenleben und spaetere Notizen." />
+  <LogoHero variant="page" />
 
   <section class="section">
-    <div class="section__header">
-      <h1>WoW-Beitraege</h1>
-      <p>Gildenideen, Spielnotizen und spaetere Updates.</p>
-    </div>
     <div class="post-card-grid">
       {posts.map((post) => (
         <PostCard
@@ -25,6 +21,8 @@ const posts = (await getCollection('wow', ({ data }) => !data.draft))
           pubDate={post.data.pubDate}
           tags={post.data.tags}
           heroImage={post.data.heroImage}
+          section="WoW"
+          sectionHref="/wow/"
         />
       ))}
     </div>
