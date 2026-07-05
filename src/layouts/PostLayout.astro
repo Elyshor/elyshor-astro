@@ -27,7 +27,7 @@ const formattedUpdatedDate = updatedDate && new Intl.DateTimeFormat('de-DE', {
 }).format(updatedDate);
 ---
 
-<BaseLayout title={`${title} · Elyshor`} description={description}>
+<BaseLayout title={`${title} · Elyshor`} description={description} ogType="article">
   <article class="post-shell">
     <header class="post-header">
       <p class="eyebrow">{section}</p>

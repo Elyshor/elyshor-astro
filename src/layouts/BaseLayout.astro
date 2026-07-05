@@ -8,6 +8,9 @@ interface Props {
   description?: string;
   logoVariant?: 'elyshor' | 'powerpuffpeons';
   robots?: string;
+  canonical?: string;
+  ogType?: 'website' | 'article';
+  ogImage?: string;
 }
 
 const {
@@ -15,7 +18,14 @@ const {
   description = 'Elyshor: Musik, WoW, Setup und Technik als statische Astro-Seite.',
   logoVariant = 'elyshor',
   robots,
+  canonical,
+  ogType = 'website',
+  ogImage = '/og-default.png',
 } = Astro.props;
+
+const siteUrl = Astro.site ?? new URL('https://elyshor.de');
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).toString();
+const ogImageUrl = new URL(ogImage, siteUrl).toString();
 ---
 
 <!doctype html>
@@ -26,7 +36,17 @@ const {
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     {robots && <meta name="robots" content={robots} />}
+    <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" sizes="any" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content="Elyshor" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
     <title>{title}</title>
     <script is:inline>
       const storedTheme = localStorage.getItem('ely_theme');

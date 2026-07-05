@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const links = [
+  { href: '/', label: 'Startseite', text: 'Zurueck zum Einstieg.' },
+  { href: '/musik/', label: 'Musik', text: 'Tracknotizen und Fundstuecke.' },
+  { href: '/wow/', label: 'WoW', text: 'Gilde, Spielnotizen und Updates.' },
+  { href: '/technik/', label: 'Technik', text: 'Website, Hardware und Tools.' },
+];
+---
+
+<BaseLayout
+  title="404 · Elyshor"
+  description="Diese Seite wurde nicht gefunden."
+  robots="noindex"
+>
+  <section class="section section--narrow not-found">
+    <div class="section__header">
+      <p class="eyebrow">404</p>
+      <h1>Diese Seite ist nicht da.</h1>
+      <p>Vielleicht wurde sie verschoben, umbenannt oder ist noch nicht fertig. Von hier findest du wieder zurueck in die wichtigsten Bereiche.</p>
+    </div>
+
+    <div class="hub-grid" aria-label="Weiterfuehrende Links">
+      {links.map((link) => (
+        <a class="hub-card" href={link.href}>
+          <h1>{link.label}</h1>
+          <p>{link.text}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

@@ -437,6 +437,11 @@ button {
   padding: 1rem;
 }
 
+.not-found {
+  display: grid;
+  gap: 1.5rem;
+}
+
 .post-header {
   margin-bottom: 1.5rem;
 }
