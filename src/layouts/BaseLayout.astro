@@ -7,12 +7,14 @@ interface Props {
   title: string;
   description?: string;
   logoVariant?: 'elyshor' | 'powerpuffpeons';
+  robots?: string;
 }
 
 const {
   title,
   description = 'Elyshor: Musik, WoW, Setup und Technik als statische Astro-Seite.',
   logoVariant = 'elyshor',
+  robots,
 } = Astro.props;
 ---
 
@@ -23,6 +25,7 @@ const {
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    {robots && <meta name="robots" content={robots} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <script is:inline>

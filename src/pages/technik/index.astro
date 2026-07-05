@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LogoHero from '../../components/LogoHero.astro';
+
+const topics = ['Hardware', 'Website', 'Tools', 'Bastelprojekte'];
+---
+
+<BaseLayout title="Technik · Elyshor" description="Technikbereich von Elyshor mit Platz fuer Hardware, Tools und Website-Notizen.">
+  <LogoHero variant="page" kicker="Technik" text="Notizen zu Hardware, Tools, Website-Kram und allem, was noch ausprobiert wird." />
+
+  <section class="hub-grid" aria-label="Technik-Themen">
+    {topics.map((topic) => (
+      <article class="hub-card">
+        <h1>{topic}</h1>
+        <p>Platzhalter fuer spaetere Technikbeitraege.</p>
+      </article>
+    ))}
+  </section>
+</BaseLayout>

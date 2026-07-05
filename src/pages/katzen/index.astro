@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LogoHero from '../../components/LogoHero.astro';
+---
+
+<BaseLayout title="Katzen · Elyshor" description="Katzenbereich von Elyshor mit Platz fuer Fotos, kleine Geschichten und Updates.">
+  <LogoHero variant="page" kicker="Katzen" text="Ein eigener kleiner Bereich fuer Katzenfotos, Geschichten und spaetere Updates." />
+
+  <section class="section section--narrow">
+    <div class="section__header">
+      <h1>Katzen</h1>
+      <p>Hier entsteht eine Sammlung mit Momenten, Bildern und kurzen Notizen.</p>
+    </div>
+    <div class="empty-state">Noch keine Eintraege.</div>
+  </section>
+</BaseLayout>

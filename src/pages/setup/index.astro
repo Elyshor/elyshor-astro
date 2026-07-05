@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LogoHero from '../../components/LogoHero.astro';
+
+const areas = ['Arbeitsplatz', 'Audio', 'Gaming', 'Sim Racing'];
+---
+
+<BaseLayout title="Setup · Elyshor" description="Setup-Notizen von Elyshor zu Arbeitsplatz, Audio, Gaming und Sim Racing.">
+  <LogoHero variant="page" kicker="Setup" text="Platz fuer mein aktuelles Setup, Lieblingsgeraete und kleine Erfahrungsnotizen." />
+
+  <section class="hub-grid" aria-label="Setup-Bereiche">
+    {areas.map((area) => (
+      <article class="hub-card">
+        <h1>{area}</h1>
+        <p>Platzhalter fuer spaetere Setup-Details.</p>
+      </article>
+    ))}
+  </section>
+</BaseLayout>

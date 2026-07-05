@@ -109,6 +109,7 @@ button {
 
 .main-nav {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 0.35rem;
   min-width: 0;
@@ -118,7 +119,7 @@ button {
   display: grid;
   gap: 0.1rem;
   min-height: 42px;
-  padding: 0.5rem 0.7rem;
+  padding: 0.5rem 0.6rem;
   border-radius: 6px;
   color: var(--muted);
   line-height: 1.1;

@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LogoHero from '../../components/LogoHero.astro';
+
+const areas = [
+  { title: 'PowerPuffPeons', text: 'Gilde, Raidnotizen und gemeinsame Projekte.', href: '/powerpuffpeons/' },
+  { title: 'Charaktere', text: 'Platzhalter fuer Profile, Rollen und Builds.', href: '#' },
+  { title: 'Notizen', text: 'Platzhalter fuer spaetere WoW-Beitraege.', href: '#' },
+];
+---
+
+<BaseLayout title="WoW · Elyshor" description="World-of-Warcraft-Bereich von Elyshor mit Gilde, Notizen und Platz fuer Builds.">
+  <LogoHero variant="page" kicker="WoW" text="Ein ruhiger Bereich fuer World of Warcraft, Gildenleben und spaetere Notizen." />
+
+  <section class="hub-grid" aria-label="WoW-Bereiche">
+    {areas.map((area) => (
+      <a class="hub-card" href={area.href}>
+        <h1>{area.title}</h1>
+        <p>{area.text}</p>
+      </a>
+    ))}
+  </section>
+</BaseLayout>

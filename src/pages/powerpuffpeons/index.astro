@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LogoHero from '../../components/LogoHero.astro';
+---
+
+<BaseLayout
+  title="PowerPuffPeons · Elyshor"
+  description="PowerPuffPeons, die World-of-Warcraft-Gilde von Elyshor."
+  logoVariant="powerpuffpeons"
+>
+  <LogoHero variant="powerpuffpeons" kicker="WoW Gilde" text="EU - Blackrock" />
+
+  <section class="section section--narrow">
+    <div class="section__header">
+      <p class="eyebrow">PowerPuffPeons</p>
+      <h1>Gildenbereich</h1>
+      <p>Hier entsteht Platz fuer Gildenbeitraege, Raidnotizen und kleine Updates rund um die PowerPuffPeons.</p>
+    </div>
+    <div class="empty-state">Noch keine Beitraege.</div>
+  </section>
+</BaseLayout>
