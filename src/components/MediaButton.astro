@@ -18,28 +18,52 @@ function getSpotifyAppUrl(webUrl: string) {
   }
 }
 
-function getYouTubeAppUrl(webUrl: string) {
+function getYouTubeId(webUrl: string) {
   try {
     const parsed = new URL(webUrl);
-    const id = parsed.hostname.includes('youtu.be')
-      ? parsed.pathname.split('/').filter(Boolean)[0]
-      : parsed.searchParams.get('v');
-    return id ? `vnd.youtube://${id}` : undefined;
+
+    if (parsed.hostname.includes('youtu.be')) {
+      return parsed.pathname.split('/').filter(Boolean)[0];
+    }
+
+    if (parsed.pathname.startsWith('/shorts/') || parsed.pathname.startsWith('/embed/')) {
+      return parsed.pathname.split('/').filter(Boolean)[1];
+    }
+
+    return parsed.searchParams.get('v') || undefined;
   } catch {
     return undefined;
   }
 }
 
-const appUrl = provider === 'Spotify' ? getSpotifyAppUrl(url) : getYouTubeAppUrl(url);
+const appUrl = provider === 'Spotify' ? getSpotifyAppUrl(url) : undefined;
+const youtubeId = provider === 'YouTube' ? getYouTubeId(url) : undefined;
 const className = `button media-button button--${provider.toLowerCase()}`;
 ---
 
+{provider === 'YouTube' && youtubeId ? (
+<button
+  class={className}
+  type="button"
+  data-youtube-toggle
+  data-youtube-id={youtubeId}
+  aria-label="YouTube-Player oeffnen"
+  aria-expanded="false"
+>
+  <svg class="media-button__icon" viewBox="0 0 24 24" aria-hidden="true">
+    <path fill="currentColor" opacity="0.18" d="M21.4 7.1a3 3 0 0 0-2.1-2.1C17.5 4.5 12 4.5 12 4.5s-5.5 0-7.3.5a3 3 0 0 0-2.1 2.1A31.2 31.2 0 0 0 2.1 12c0 1.7.1 3.4.5 4.9A3 3 0 0 0 4.7 19c1.8.5 7.3.5 7.3.5s5.5 0 7.3-.5a3 3 0 0 0 2.1-2.1c.4-1.5.5-3.2.5-4.9s-.1-3.4-.5-4.9Z"></path>
+    <path fill="currentColor" d="m10 15.4 5.2-3.4L10 8.6v6.8Z"></path>
+  </svg>
+  <span class="sr-only">YouTube</span>
+</button>
+) : (
 <a
   class={className}
   href={url}
-  target="_blank"
+  target={appUrl ? undefined : '_blank'}
   rel="noreferrer"
   data-app-href={appUrl}
+  data-web-href={appUrl ? url : undefined}
   aria-label={`${provider} öffnen`}
 >
   {provider === 'Spotify' ? (
@@ -55,22 +79,145 @@ const className = `button media-button button--${provider.toLowerCase()}`;
   )}
   <span class="sr-only">{provider}</span>
 </a>
+)}
 
 <script>
-  document.addEventListener('click', (event) => {
-    const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('[data-app-href]');
-    const appHref = link?.dataset.appHref;
-    if (!link || !appHref) return;
+  const setupMediaControls = () => {
+    if (window.__elyMediaControlsReady) return;
+    window.__elyMediaControlsReady = true;
 
-    event.preventDefault();
-    const webHref = link.href;
-    const startedAt = Date.now();
-    window.location.href = appHref;
-
-    window.setTimeout(() => {
-      if (document.visibilityState === 'visible' && Date.now() - startedAt < 1600) {
-        window.open(webHref, '_blank', 'noopener');
+    const getConsent = () => {
+      try {
+        const stored = window.localStorage.getItem('ely_consent');
+        if (stored && JSON.parse(stored).externalMedia) return true;
+        return window.localStorage.getItem('ely_media_consent') === 'true';
+      } catch {
+        return false;
       }
-    }, 900);
-  });
+    };
+
+    const allowExternalMedia = () => {
+      try {
+        window.localStorage.setItem(
+          'ely_consent',
+          JSON.stringify({ necessary: true, externalMedia: true, decidedAt: new Date().toISOString() }),
+        );
+        window.localStorage.setItem('ely_media_consent', 'true');
+      } catch {
+        // Storage can fail in private modes; the current panel still proceeds.
+      }
+      window.dispatchEvent(new CustomEvent('ely-consent-updated'));
+    };
+
+    const closePanel = (panel) => {
+      panel.hidden = true;
+      panel.innerHTML = '';
+      const card = panel.closest('article');
+      card?.querySelector('[data-youtube-toggle]')?.setAttribute('aria-expanded', 'false');
+    };
+
+    const renderPlayer = (panel, videoId, title) => {
+      panel.hidden = false;
+      panel.innerHTML = `
+        <div class="media-inline-frame">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}"
+            title="${title.replace(/"/g, '&quot;')}"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <button class="media-inline-close" type="button" data-youtube-close>Player schliessen</button>
+      `;
+    };
+
+    const renderConsent = (panel) => {
+      panel.hidden = false;
+      panel.innerHTML = `
+        <div class="media-inline-consent">
+          <p>YouTube wird erst nach Zustimmung zu externen Medien geladen.</p>
+          <button type="button" data-youtube-consent>Externe Medien erlauben</button>
+        </div>
+      `;
+    };
+
+    document.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+
+      const appLink = target.closest('[data-app-href]');
+      const appHref = appLink?.dataset.appHref;
+      const webHref = appLink?.dataset.webHref || appLink?.href;
+
+      if (appLink && appHref && webHref) {
+        event.preventDefault();
+        let appHandled = false;
+        const cleanup = () => {
+          document.removeEventListener('visibilitychange', onVisibilityChange);
+          window.removeEventListener('pagehide', markHandled);
+          window.removeEventListener('blur', markHandled);
+        };
+        const markHandled = () => {
+          appHandled = true;
+          cleanup();
+        };
+        const onVisibilityChange = () => {
+          if (document.visibilityState === 'hidden') markHandled();
+        };
+
+        document.addEventListener('visibilitychange', onVisibilityChange);
+        window.addEventListener('pagehide', markHandled, { once: true });
+        window.addEventListener('blur', markHandled, { once: true });
+        window.location.href = appHref;
+
+        window.setTimeout(() => {
+          cleanup();
+          if (!appHandled && document.visibilityState === 'visible') {
+            window.location.href = webHref;
+          }
+        }, 1800);
+        return;
+      }
+
+      const closeButton = target.closest('[data-youtube-close]');
+      if (closeButton) {
+        const panel = closeButton.closest('[data-youtube-panel]');
+        if (panel) closePanel(panel);
+        return;
+      }
+
+      const consentButton = target.closest('[data-youtube-consent]');
+      if (consentButton) {
+        const panel = consentButton.closest('[data-youtube-panel]');
+        if (panel) {
+          allowExternalMedia();
+          renderPlayer(panel, panel.dataset.youtubeId, panel.dataset.youtubeTitle || 'YouTube');
+        }
+        return;
+      }
+
+      const youtubeButton = target.closest('[data-youtube-toggle]');
+      if (!youtubeButton) return;
+
+      const card = youtubeButton.closest('article');
+      const panel = card?.querySelector('[data-youtube-panel]');
+      const videoId = youtubeButton.dataset.youtubeId || panel?.dataset.youtubeId;
+      if (!panel || !videoId) return;
+
+      if (!panel.hidden) {
+        closePanel(panel);
+        return;
+      }
+
+      youtubeButton.setAttribute('aria-expanded', 'true');
+      if (getConsent()) {
+        renderPlayer(panel, videoId, panel.dataset.youtubeTitle || 'YouTube');
+      } else {
+        renderConsent(panel);
+      }
+    });
+  };
+
+  setupMediaControls();
 </script>

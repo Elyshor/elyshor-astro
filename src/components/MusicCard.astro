@@ -17,6 +17,24 @@ const description = [post.data.artist, post.data.track].filter(Boolean).join(' Â
 const rawImage = post.data.coverImage || post.data.albumCover || post.data.image || post.data.heroImage;
 const heroImage = rawImage?.startsWith('/assets/img/') ? rawImage : undefined;
 const tags = ['Musik', ...post.data.tags.filter((tag) => tag.toLowerCase() !== 'musik')].slice(0, 5);
+
+function getYouTubeId(webUrl?: string) {
+  if (!webUrl) return undefined;
+  try {
+    const parsed = new URL(webUrl);
+    if (parsed.hostname.includes('youtu.be')) {
+      return parsed.pathname.split('/').filter(Boolean)[0];
+    }
+    if (parsed.pathname.startsWith('/shorts/') || parsed.pathname.startsWith('/embed/')) {
+      return parsed.pathname.split('/').filter(Boolean)[1];
+    }
+    return parsed.searchParams.get('v') || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+const youtubeId = getYouTubeId(post.data.youtubeUrl);
 ---
 
 <article class="music-card elyshor-post-card elyshor-post-card--wide">
@@ -25,19 +43,22 @@ const tags = ['Musik', ...post.data.tags.filter((tag) => tag.toLowerCase() !== '
   </a>
   <div class="music-card__body">
     <div>
-      <time datetime={post.data.pubDate.toISOString()}>{date}</time>
+      <div class="card-meta-row">
+        <time datetime={post.data.pubDate.toISOString()}>{date}</time>
+        <ul class="tag-list tag-list--compact" aria-label="Tags">
+          {tags.map((tag) => (
+            <li>{tag.toLowerCase() === 'musik' ? <a href="/musik/">{tag}</a> : <a href={tagHref(tag)}>{tag}</a>}</li>
+          ))}
+        </ul>
+      </div>
       <h2><a href={`/musik/${post.id}/`}>{post.data.title}</a></h2>
       <p>{description}</p>
     </div>
-    <ul class="tag-list tag-list--compact" aria-label="Tags">
-      {tags.map((tag) => (
-        <li>{tag.toLowerCase() === 'musik' ? <a href="/musik/">{tag}</a> : <a href={tagHref(tag)}>{tag}</a>}</li>
-      ))}
-    </ul>
     <div class="button-row">
       {post.data.spotifyUrl && <MediaButton provider="Spotify" url={post.data.spotifyUrl} />}
       {post.data.youtubeUrl && <MediaButton provider="YouTube" url={post.data.youtubeUrl} />}
       <a class="button button--ghost button--read" href={`/musik/${post.id}/`}>Beitrag lesen â†’</a>
     </div>
+    {youtubeId && <div class="media-inline-panel" data-youtube-panel data-youtube-id={youtubeId} data-youtube-title={post.data.title} hidden></div>}
   </div>
 </article>

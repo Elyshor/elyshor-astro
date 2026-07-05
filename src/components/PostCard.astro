@@ -43,6 +43,24 @@ const formattedDate = new Intl.DateTimeFormat('de-DE', {
 const rawImage = coverImage || albumCover || image || heroImage;
 const cardImage = rawImage?.startsWith('/assets/img/') ? rawImage : undefined;
 const displayTags = section ? [section, ...tags.filter((tag) => tag.toLowerCase() !== section.toLowerCase())] : tags;
+
+function getYouTubeId(webUrl?: string) {
+  if (!webUrl) return undefined;
+  try {
+    const parsed = new URL(webUrl);
+    if (parsed.hostname.includes('youtu.be')) {
+      return parsed.pathname.split('/').filter(Boolean)[0];
+    }
+    if (parsed.pathname.startsWith('/shorts/') || parsed.pathname.startsWith('/embed/')) {
+      return parsed.pathname.split('/').filter(Boolean)[1];
+    }
+    return parsed.searchParams.get('v') || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+const youtubeId = getYouTubeId(youtubeUrl);
 ---
 
 <article class:list={['post-card elyshor-post-card', { 'post-card--has-image': cardImage }]}>
@@ -52,21 +70,24 @@ const displayTags = section ? [section, ...tags.filter((tag) => tag.toLowerCase(
     </a>
   )}
   <div class="post-card__body">
-    <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+    <div class="card-meta-row">
+      <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+      {displayTags.length > 0 && (
+        <ul class="tag-list tag-list--compact" aria-label="Tags">
+          {displayTags.slice(0, 5).map((tag) => (
+            <li>{sectionHref && tag === section ? <a href={sectionHref}>{tag}</a> : <a href={tagHref(tag)}>{tag}</a>}</li>
+          ))}
+        </ul>
+      )}
+    </div>
     <h2><a href={href}>{title}</a></h2>
     {meta && <p class="post-card__meta">{meta}</p>}
     <p>{description}</p>
-    {displayTags.length > 0 && (
-      <ul class="tag-list tag-list--compact" aria-label="Tags">
-        {displayTags.slice(0, 5).map((tag) => (
-          <li>{sectionHref && tag === section ? <a href={sectionHref}>{tag}</a> : <a href={tagHref(tag)}>{tag}</a>}</li>
-        ))}
-      </ul>
-    )}
     <div class="button-row">
       {spotifyUrl && <MediaButton provider="Spotify" url={spotifyUrl} />}
       {youtubeUrl && <MediaButton provider="YouTube" url={youtubeUrl} />}
       <a class="button button--read" href={href}>Beitrag lesen →</a>
     </div>
+    {youtubeId && <div class="media-inline-panel" data-youtube-panel data-youtube-id={youtubeId} data-youtube-title={title} hidden></div>}
   </div>
 </article>
