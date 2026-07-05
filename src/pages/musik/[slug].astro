@@ -16,12 +16,23 @@ const { Content } = await render(post);
 ---
 
 <PostLayout
+  id={post.id}
+  collection="music"
   section="Musik"
   title={post.data.title}
   description={post.data.description}
   pubDate={post.data.pubDate}
   updatedDate={post.data.updatedDate}
   tags={post.data.tags}
+  coverImage={post.data.coverImage}
+  coverAlt={post.data.coverAlt}
+  coverCredit={post.data.coverCredit}
+  coverSourceUrl={post.data.coverSourceUrl}
+  coverProvider={post.data.coverProvider}
+  coverLicense={post.data.coverLicense}
+  image={post.data.image}
+  heroImage={post.data.heroImage}
+  albumCover={post.data.albumCover}
   spotifyUrl={post.data.spotifyUrl}
   youtubeUrl={post.data.youtubeUrl}
 >

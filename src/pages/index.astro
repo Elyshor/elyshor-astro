@@ -21,15 +21,16 @@ const [musicPosts, wowPosts, techPosts, catPosts] = await Promise.all([
 const posts = [
   ...musicPosts.map((post) => ({
     ...post,
+    collection: 'music',
     section: sections.music,
     href: `/musik/${post.id}/`,
     meta: [post.data.artist, post.data.track].filter(Boolean).join(' · '),
     spotifyUrl: post.data.spotifyUrl,
     youtubeUrl: post.data.youtubeUrl,
   })),
-  ...wowPosts.map((post) => ({ ...post, section: sections.wow, href: `/wow/${post.id}/`, meta: '' })),
-  ...techPosts.map((post) => ({ ...post, section: sections.tech, href: `/technik/${post.id}/`, meta: '' })),
-  ...catPosts.map((post) => ({ ...post, section: sections.cats, href: `/katzen/${post.id}/`, meta: '' })),
+  ...wowPosts.map((post) => ({ ...post, collection: 'wow', section: sections.wow, href: `/wow/${post.id}/`, meta: '' })),
+  ...techPosts.map((post) => ({ ...post, collection: 'tech', section: sections.tech, href: `/technik/${post.id}/`, meta: '' })),
+  ...catPosts.map((post) => ({ ...post, collection: 'cats', section: sections.cats, href: `/katzen/${post.id}/`, meta: '' })),
 ].sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 ---
 
@@ -40,6 +41,8 @@ const posts = [
     <div class="post-card-grid ely-post-list ely-post-list--wide">
       {posts.map((post) => (
         <PostCard
+          id={post.id}
+          collection={post.collection}
           href={post.href}
           title={post.data.title}
           description={post.data.description}
@@ -47,6 +50,11 @@ const posts = [
           tags={post.data.tags}
           heroImage={post.data.heroImage}
           coverImage={post.data.coverImage}
+          coverAlt={post.data.coverAlt}
+          coverCredit={post.data.coverCredit}
+          coverSourceUrl={post.data.coverSourceUrl}
+          coverProvider={post.data.coverProvider}
+          coverLicense={post.data.coverLicense}
           image={post.data.image}
           albumCover={post.data.albumCover}
           section={post.section.label}

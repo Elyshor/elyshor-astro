@@ -1,20 +1,51 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import SpotifyEmbed from '../components/SpotifyEmbed.astro';
-import YouTubeEmbed from '../components/YouTubeEmbed.astro';
+import MediaButton from '../components/MediaButton.astro';
+import { getCoverForPost } from '../lib/covers';
 
 interface Props {
+  id?: string;
+  collection?: 'music' | 'wow' | 'tech' | 'cats';
   section: string;
   title: string;
   description: string;
   pubDate: Date;
   updatedDate?: Date;
   tags: string[];
+  coverImage?: string;
+  coverAlt?: string;
+  coverCredit?: string;
+  coverSourceUrl?: string;
+  coverProvider?: string;
+  coverLicense?: string;
+  image?: string;
+  heroImage?: string;
+  albumCover?: string;
   spotifyUrl?: string;
   youtubeUrl?: string;
 }
 
-const { section, title, description, pubDate, updatedDate, tags, spotifyUrl, youtubeUrl } = Astro.props;
+const {
+  id,
+  collection = 'music',
+  section,
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  tags,
+  coverImage,
+  coverAlt,
+  coverCredit,
+  coverSourceUrl,
+  coverProvider,
+  coverLicense,
+  image,
+  heroImage,
+  albumCover,
+  spotifyUrl,
+  youtubeUrl,
+} = Astro.props;
 const formattedDate = new Intl.DateTimeFormat('de-DE', {
   day: '2-digit',
   month: 'long',
@@ -25,10 +56,44 @@ const formattedUpdatedDate = updatedDate && new Intl.DateTimeFormat('de-DE', {
   month: 'long',
   year: 'numeric',
 }).format(updatedDate);
+
+function getYouTubeId(webUrl?: string) {
+  if (!webUrl) return undefined;
+  try {
+    const parsed = new URL(webUrl);
+    const parts = parsed.pathname.split('/').filter(Boolean);
+
+    if (parsed.hostname.includes('youtu.be')) {
+      return parts[0];
+    }
+
+    if (parts[0] === 'embed' || parts[0] === 'shorts') {
+      return parts[1];
+    }
+
+    return parsed.searchParams.get('v') || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+const youtubeId = getYouTubeId(youtubeUrl);
+const cover = getCoverForPost(collection, id, {
+  title,
+  coverImage,
+  coverAlt,
+  coverCredit,
+  coverSourceUrl,
+  coverProvider,
+  coverLicense,
+  image,
+  heroImage,
+  albumCover,
+});
 ---
 
 <BaseLayout title={`${title} · Elyshor`} description={description} ogType="article">
-  <article class="post-shell">
+  <article class="post-shell" data-media-card>
     <header class="post-header">
       <p class="eyebrow">{section}</p>
       <h1>{title}</h1>
@@ -47,10 +112,29 @@ const formattedUpdatedDate = updatedDate && new Intl.DateTimeFormat('de-DE', {
     </div>
 
     {(spotifyUrl || youtubeUrl) && (
-      <section class="embed-stack" aria-label="Externe Medien">
-        {spotifyUrl && <SpotifyEmbed url={spotifyUrl} title={title} />}
-        {youtubeUrl && <YouTubeEmbed url={youtubeUrl} title={title} />}
+      <section class="embed-stack post-media-actions" aria-label="Externe Medien">
+        <div class="button-row">
+          {spotifyUrl && <MediaButton provider="Spotify" url={spotifyUrl} />}
+          {youtubeUrl && <MediaButton provider="YouTube" url={youtubeUrl} />}
+        </div>
+        <div class="media-inline-status" data-media-status hidden></div>
+        {youtubeUrl && (
+          <div
+            class="inline-youtube-player media-inline-panel"
+            data-youtube-player
+            data-youtube-panel
+            data-youtube-url={youtubeUrl}
+            data-youtube-id={youtubeId}
+            data-youtube-title={title}
+            hidden
+          ></div>
+        )}
       </section>
+    )}
+    {cover.credit && (
+      <p class="post-cover-credit">
+        Bild: {cover.sourceUrl ? <a href={cover.sourceUrl} target="_blank" rel="noopener noreferrer">{cover.credit}</a> : cover.credit}
+      </p>
     )}
   </article>
 </BaseLayout>

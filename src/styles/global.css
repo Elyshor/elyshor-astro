@@ -2712,6 +2712,114 @@ html.is-mobile-menu-visible .menu-toggle {
   margin-top: 0.38rem;
 }
 
+.media-action .media-button__icon,
+.media-button__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.media-action-feedback {
+  min-height: 1rem;
+  margin-top: 0.12rem;
+  font-size: 0.76rem;
+}
+
+.media-action-fallback-link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-link);
+  font-weight: 680;
+  text-decoration: none;
+}
+
+.media-action-fallback-link:hover,
+.media-action-fallback-link:focus-visible {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.media-action,
+.ely-home-posts .button-row .media-action {
+  width: 2.5rem;
+  height: 2.5rem;
+  min-height: 2.5rem;
+}
+
+.media-action .media-button__icon,
+.ely-home-posts .media-action .media-button__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.media-inline-status[hidden],
+.inline-youtube-player[hidden] {
+  display: none;
+}
+
+.media-inline-status {
+  min-height: 1rem;
+  margin-top: 0.18rem;
+  color: var(--color-text-muted);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.media-inline-status a {
+  color: var(--color-link);
+  font-weight: 680;
+  text-decoration: none;
+}
+
+.media-inline-status a:hover,
+.media-inline-status a:focus-visible {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.inline-youtube-player {
+  max-width: 560px;
+  margin-top: 0.75rem;
+}
+
+.inline-youtube-player .media-inline-frame {
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  max-width: 560px;
+  border-radius: 12px;
+}
+
+.inline-youtube-player iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.music-card__cover,
+.post-card__image {
+  padding: 0.38rem;
+}
+
+.music-card__cover img,
+.post-card__image img {
+  border-radius: 8px;
+}
+
+.post-cover-credit {
+  margin: 1.1rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.post-cover-credit a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
 @media (max-width: 600px) {
   .card-meta-row {
     flex-wrap: wrap;

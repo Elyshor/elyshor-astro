@@ -1,8 +1,11 @@
 ---
 import MediaButton from './MediaButton.astro';
+import { getCoverForPost } from '../lib/covers';
 import { tagHref } from '../lib/tags';
 
 interface Props {
+  id?: string;
+  collection?: 'music' | 'wow' | 'tech' | 'cats';
   href: string;
   title: string;
   description: string;
@@ -12,6 +15,11 @@ interface Props {
   coverImage?: string;
   image?: string;
   albumCover?: string;
+  coverAlt?: string;
+  coverCredit?: string;
+  coverSourceUrl?: string;
+  coverProvider?: string;
+  coverLicense?: string;
   section?: string;
   sectionHref?: string;
   meta?: string;
@@ -20,6 +28,8 @@ interface Props {
 }
 
 const {
+  id,
+  collection = 'music',
   href,
   title,
   description,
@@ -29,6 +39,11 @@ const {
   coverImage,
   image,
   albumCover,
+  coverAlt,
+  coverCredit,
+  coverSourceUrl,
+  coverProvider,
+  coverLicense,
   section,
   sectionHref,
   meta,
@@ -40,8 +55,19 @@ const formattedDate = new Intl.DateTimeFormat('de-DE', {
   month: '2-digit',
   year: 'numeric',
 }).format(pubDate);
-const rawImage = coverImage || albumCover || image || heroImage;
-const cardImage = rawImage?.startsWith('/assets/img/') ? rawImage : undefined;
+const cover = getCoverForPost(collection, id, {
+  title,
+  coverImage,
+  coverAlt,
+  coverCredit,
+  coverSourceUrl,
+  coverProvider,
+  coverLicense,
+  image,
+  heroImage,
+  albumCover,
+});
+const cardImage = cover.image;
 const displayTags = section ? [section, ...tags.filter((tag) => tag.toLowerCase() !== section.toLowerCase())] : tags;
 
 function getYouTubeId(webUrl?: string) {
@@ -63,10 +89,10 @@ function getYouTubeId(webUrl?: string) {
 const youtubeId = getYouTubeId(youtubeUrl);
 ---
 
-<article class:list={['post-card elyshor-post-card', { 'post-card--has-image': cardImage }]}>
+<article class:list={['post-card elyshor-post-card', { 'post-card--has-image': cardImage }]} data-media-card>
   {cardImage && (
     <a class="post-card__image" href={href} aria-label={`${title} öffnen`}>
-      <img src={cardImage} alt="" loading="lazy" />
+      <img src={cardImage} alt={cover.alt} loading="lazy" />
     </a>
   )}
   <div class="post-card__body">
@@ -88,6 +114,17 @@ const youtubeId = getYouTubeId(youtubeUrl);
       {youtubeUrl && <MediaButton provider="YouTube" url={youtubeUrl} />}
       <a class="button button--read" href={href}>Beitrag lesen →</a>
     </div>
-    {youtubeId && <div class="media-inline-panel" data-youtube-panel data-youtube-id={youtubeId} data-youtube-title={title} hidden></div>}
+    <div class="media-inline-status" data-media-status hidden></div>
+    {youtubeUrl && (
+      <div
+        class="inline-youtube-player media-inline-panel"
+        data-youtube-player
+        data-youtube-panel
+        data-youtube-url={youtubeUrl}
+        data-youtube-id={youtubeId}
+        data-youtube-title={title}
+        hidden
+      ></div>
+    )}
   </div>
 </article>

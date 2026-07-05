@@ -81,6 +81,17 @@ Output directory:
 dist
 ```
 
+## Automatische Coverbilder
+
+Elyshor kann freie generische Coverbilder ueber die Pexels API anhand von Collection, Tags und Beitragstitel vorbereiten.
+
+1. `PEXELS_API_KEY` lokal in `.env` setzen. Vorlage: `.env.example`.
+2. `npm run build` ausfuehren.
+3. Das Script `scripts/generate-auto-covers.mjs` laedt fehlende generische Bilder nach `public/assets/img/covers/generated/` und schreibt Metadaten nach `src/generated/auto-covers.json`.
+4. Fuer Cloudflare Pages `PEXELS_API_KEY` in den Environment Variables setzen.
+
+Ohne API-Key laeuft der Build weiter und nutzt vorhandene generierte Cover oder lokale Fallbacks.
+
 ## Neue Musikposts
 
 Neue Musikbeitraege werden als MDX-Dateien in `src/content/music/` angelegt. Der Dateiname wird zur URL, zum Beispiel:

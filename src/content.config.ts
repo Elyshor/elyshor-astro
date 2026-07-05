@@ -11,6 +11,11 @@ const baseSchema = z.object({
   draft: z.boolean().optional(),
   heroImage: z.string().optional(),
   coverImage: z.string().optional(),
+  coverAlt: z.string().optional(),
+  coverCredit: z.string().optional(),
+  coverSourceUrl: z.string().url().optional(),
+  coverProvider: z.string().optional(),
+  coverLicense: z.string().optional(),
   image: z.string().optional(),
   albumCover: z.string().optional(),
 });

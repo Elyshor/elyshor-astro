@@ -1,0 +1,74 @@
+[
+  {
+    "id": "erster-katzenmoment",
+    "slug": "erster-katzenmoment",
+    "collection": "cats",
+    "imagePath": "/assets/img/covers/generated/cats-erster-katzenmoment.jpg",
+    "alt": "Erster Katzenmoment - generisches freies Coverbild",
+    "provider": "Pexels",
+    "photographer": "Natalia Sevruk",
+    "sourceUrl": "https://www.pexels.com/photo/sleeping-cat-on-street-in-istanbul-turkey-38404712/",
+    "license": "Pexels License",
+    "query": "sleepy cat"
+  },
+  {
+    "id": "49th-main-jane-round-the-block",
+    "slug": "49th-main-jane-round-the-block",
+    "collection": "music",
+    "imagePath": "/assets/img/covers/generated/music-49th-main-jane-round-the-block.jpg",
+    "alt": "49th & Main, Jane - Round The Block - generisches freies Coverbild",
+    "provider": "Pexels",
+    "photographer": "Egor Komarov",
+    "sourceUrl": "https://www.pexels.com/photo/close-up-of-headphones-on-a-groovebox-12575727/",
+    "license": "Pexels License",
+    "query": "headphones music"
+  },
+  {
+    "id": "bad-tuner-young-soul",
+    "slug": "bad-tuner-young-soul",
+    "collection": "music",
+    "imagePath": "/assets/img/covers/generated/music-bad-tuner-young-soul.jpg",
+    "alt": "bad tuner - young soul - generisches freies Coverbild",
+    "provider": "Pexels",
+    "photographer": "cottonbro studio",
+    "sourceUrl": "https://www.pexels.com/photo/close-up-of-headphones-hanging-on-a-metal-wall-5650531/",
+    "license": "Pexels License",
+    "query": "music studio"
+  },
+  {
+    "id": "maya-jane-coles-dreamz",
+    "slug": "maya-jane-coles-dreamz",
+    "collection": "music",
+    "imagePath": "/assets/img/covers/generated/music-maya-jane-coles-dreamz.jpg",
+    "alt": "Maya Jane Coles - Dreamz - generisches freies Coverbild",
+    "provider": "Pexels",
+    "photographer": "TStudio",
+    "sourceUrl": "https://www.pexels.com/photo/close-up-shot-of-an-electronic-synthesizer-8071910/",
+    "license": "Pexels License",
+    "query": "synth lights"
+  },
+  {
+    "id": "astro-content-system",
+    "slug": "astro-content-system",
+    "collection": "tech",
+    "imagePath": "/assets/img/covers/generated/tech-astro-content-system.jpg",
+    "alt": "Astro Content-System - generisches freies Coverbild",
+    "provider": "Pexels",
+    "photographer": "Pachon in Motion",
+    "sourceUrl": "https://www.pexels.com/photo/futuristic-digital-abstract-circuitry-design-30547596/",
+    "license": "Pexels License",
+    "query": "technology abstract"
+  },
+  {
+    "id": "powerpuffpeons-erster-notizzettel",
+    "slug": "powerpuffpeons-erster-notizzettel",
+    "collection": "wow",
+    "imagePath": "/assets/img/covers/generated/wow-powerpuffpeons-erster-notizzettel.jpg",
+    "alt": "PowerPuffPeons: Erster Notizzettel - generisches freies Coverbild",
+    "provider": "Pexels",
+    "photographer": "Juan Felipe Ramírez",
+    "sourceUrl": "https://www.pexels.com/photo/woman-in-halloween-costume-in-fores-14414968/",
+    "license": "Pexels License",
+    "query": "fantasy adventure"
+  }
+]

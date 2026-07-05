@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import MediaButton from './MediaButton.astro';
+import { getCoverForPost } from '../lib/covers';
 import { tagHref } from '../lib/tags';
 
 interface Props {
@@ -14,8 +15,7 @@ const date = new Intl.DateTimeFormat('de-DE', {
   year: 'numeric',
 }).format(post.data.pubDate);
 const description = [post.data.artist, post.data.track].filter(Boolean).join(' · ') || post.data.description;
-const rawImage = post.data.coverImage || post.data.albumCover || post.data.image || post.data.heroImage;
-const heroImage = rawImage?.startsWith('/assets/img/') ? rawImage : undefined;
+const cover = getCoverForPost('music', post.id, post.data);
 const tags = ['Musik', ...post.data.tags.filter((tag) => tag.toLowerCase() !== 'musik')].slice(0, 5);
 
 function getYouTubeId(webUrl?: string) {
@@ -37,9 +37,9 @@ function getYouTubeId(webUrl?: string) {
 const youtubeId = getYouTubeId(post.data.youtubeUrl);
 ---
 
-<article class="music-card elyshor-post-card elyshor-post-card--wide">
+<article class="music-card elyshor-post-card elyshor-post-card--wide" data-media-card>
   <a class="music-card__cover" href={`/musik/${post.id}/`} aria-label={`${post.data.title} öffnen`}>
-    {heroImage ? <img src={heroImage} alt="" loading="lazy" /> : <span aria-hidden="true">♪</span>}
+    {cover.image ? <img src={cover.image} alt={cover.alt} loading="lazy" /> : <span aria-hidden="true">♪</span>}
   </a>
   <div class="music-card__body">
     <div>
@@ -59,6 +59,17 @@ const youtubeId = getYouTubeId(post.data.youtubeUrl);
       {post.data.youtubeUrl && <MediaButton provider="YouTube" url={post.data.youtubeUrl} />}
       <a class="button button--ghost button--read" href={`/musik/${post.id}/`}>Beitrag lesen →</a>
     </div>
-    {youtubeId && <div class="media-inline-panel" data-youtube-panel data-youtube-id={youtubeId} data-youtube-title={post.data.title} hidden></div>}
+    <div class="media-inline-status" data-media-status hidden></div>
+    {post.data.youtubeUrl && (
+      <div
+        class="inline-youtube-player media-inline-panel"
+        data-youtube-player
+        data-youtube-panel
+        data-youtube-url={post.data.youtubeUrl}
+        data-youtube-id={youtubeId}
+        data-youtube-title={post.data.title}
+        hidden
+      ></div>
+    )}
   </div>
 </article>
