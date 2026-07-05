@@ -9,8 +9,8 @@ const { title, provider, src } = Astro.props;
 ---
 
 <div class="media-consent" data-media-consent data-src={src} data-title={title}>
-  <div class="media-consent__placeholder">
-    <p>Externe Medien laden</p>
+  <div class="media-consent__placeholder ely-external-media-placeholder">
+    <strong>Externe Medien laden</strong>
     <span>{provider} wird erst nach deiner Zustimmung eingebettet.</span>
     <button type="button" data-load-media>{provider} laden</button>
   </div>

@@ -6,18 +6,17 @@ import MusicCard from '../components/MusicCard.astro';
 
 const posts = (await getCollection('music', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
-  .slice(0, 4);
+  .slice(0, 6);
 ---
 
 <BaseLayout title="Elyshor">
-  <LogoHero variant="home" text="Musik, WoW, Technik und kleine Projekte." />
+  <LogoHero variant="home" />
 
-  <section class="section">
+  <section class="section elyshor-home-posts">
     <div class="section__header">
-      <p class="eyebrow">Neuste Beiträge</p>
-      <h1>Frische Musiknotizen</h1>
+      <h1>neuste beiträge</h1>
     </div>
-    <div class="card-grid">
+    <div class="card-grid ely-post-list ely-post-list--wide">
       {posts.map((post) => <MusicCard post={post} />)}
     </div>
   </section>

@@ -1,34 +1,29 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
 
-interface Props {
-  logoVariant?: 'elyshor' | 'powerpuffpeons';
-}
-
-const { logoVariant = 'elyshor' } = Astro.props;
 const navItems = [
-  { href: '/', label: 'Start' },
   { href: '/musik/', label: 'Musik' },
   { href: '/wow/', label: 'WoW' },
-  { href: '/powerpuffpeons/', label: 'PowerPuffPeons' },
-  { href: '/setup/', label: 'Setup' },
-  { href: '/technik/', label: 'Technik' },
-  { href: '/katzen/', label: 'Katzen' },
-  { href: '/about/', label: 'Über mich' },
+  { href: '/powerpuffpeons/', label: 'PowerPuffPeons', sub: true },
+  { href: '/setup-technik/', label: 'Setup & Technik' },
+  { href: '/links/', label: 'Links' },
 ];
 ---
 
-<header class="site-header">
-  <a class="header-mark" href="/" aria-label="Elyshor Startseite">
-    {logoVariant === 'powerpuffpeons' ? 'PPP' : 'ELY'}
-  </a>
-  <nav class="main-nav" aria-label="Hauptnavigation">
-    {navItems.map((item) => (
-      <a href={item.href}>
-        <span>{item.label}</span>
-        {item.sublabel && <small>{item.sublabel}</small>}
-      </a>
-    ))}
-  </nav>
-  <ThemeToggle />
+<header class="site-header" id="site-header">
+  <div class="site-header__inner">
+    <a class="site-logo" href="/" aria-label="Elyshor Startseite">
+      <img src="/assets/img/ely-logo-header-cropped.webp" alt="Elyshor" width="72" height="72" />
+    </a>
+
+    <nav class="main-nav site-nav" aria-label="Hauptnavigation">
+      {navItems.map((item) => (
+        <a class={item.sub ? 'main-nav__sub' : undefined} href={item.href}>{item.label}</a>
+      ))}
+    </nav>
+
+    <div class="site-header__actions">
+      <ThemeToggle />
+    </div>
+  </div>
 </header>

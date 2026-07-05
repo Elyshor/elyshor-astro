@@ -20,7 +20,7 @@ const {
   robots,
   canonical,
   ogType = 'website',
-  ogImage = '/og-default.png',
+  ogImage = '/assets/img/elyshor-logo-transparent-cropped.webp',
 } = Astro.props;
 
 const siteUrl = Astro.site ?? new URL('https://elyshor.de');
@@ -29,7 +29,7 @@ const ogImageUrl = new URL(ogImage, siteUrl).toString();
 ---
 
 <!doctype html>
-<html lang="de" data-theme="dark">
+<html lang="de" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -37,9 +37,9 @@ const ogImageUrl = new URL(ogImage, siteUrl).toString();
     <meta name="description" content={description} />
     {robots && <meta name="robots" content={robots} />}
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" sizes="any" href="/favicon.ico" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/img/favicon-192.png" />
+    <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={ogType} />
@@ -50,8 +50,7 @@ const ogImageUrl = new URL(ogImage, siteUrl).toString();
     <title>{title}</title>
     <script is:inline>
       const storedTheme = localStorage.getItem('ely_theme');
-      const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-      document.documentElement.dataset.theme = storedTheme || (prefersLight ? 'light' : 'dark');
+      document.documentElement.dataset.theme = storedTheme || 'light';
     </script>
   </head>
   <body>

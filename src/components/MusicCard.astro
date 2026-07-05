@@ -12,11 +12,12 @@ const date = new Intl.DateTimeFormat('de-DE', {
   year: 'numeric',
 }).format(post.data.pubDate);
 const description = [post.data.artist, post.data.track].filter(Boolean).join(' · ') || post.data.description;
+const heroImage = post.data.heroImage?.startsWith('/assets/img/') ? post.data.heroImage : undefined;
 ---
 
-<article class="music-card">
+<article class="music-card elyshor-post-card elyshor-post-card--wide">
   <a class="music-card__cover" href={`/musik/${post.id}/`} aria-label={`${post.data.title} öffnen`}>
-    {post.data.heroImage ? <img src={post.data.heroImage} alt="" loading="lazy" /> : <span>{post.data.track || post.data.title}</span>}
+    {heroImage ? <img src={heroImage} alt="" loading="lazy" /> : <span aria-hidden="true">♪</span>}
   </a>
   <div class="music-card__body">
     <div>
@@ -28,8 +29,8 @@ const description = [post.data.artist, post.data.track].filter(Boolean).join(' �
       {post.data.tags.slice(0, 5).map((tag) => <li>{tag}</li>)}
     </ul>
     <div class="button-row">
-      {post.data.spotifyUrl && <a class="button button--ghost" href={post.data.spotifyUrl} rel="noreferrer">Spotify</a>}
-      {post.data.youtubeUrl && <a class="button button--ghost" href={post.data.youtubeUrl} rel="noreferrer">YouTube</a>}
+      {post.data.spotifyUrl && <a class="button button--ghost button--spotify" href={post.data.spotifyUrl} rel="noreferrer">Spotify</a>}
+      {post.data.youtubeUrl && <a class="button button--ghost button--youtube" href={post.data.youtubeUrl} rel="noreferrer">YouTube</a>}
     </div>
   </div>
 </article>

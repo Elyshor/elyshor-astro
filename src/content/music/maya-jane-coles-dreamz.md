@@ -6,7 +6,6 @@ track: "Dreamz"
 pubDate: 2026-06-26
 spotifyUrl: "https://open.spotify.com/track/5KJYdEEiPG8ePDia1FD1hm"
 youtubeUrl: "https://www.youtube.com/watch?v=641JYP4dIaA"
-heroImage: "/images/music/maya-jane-coles-dreamz.webp"
 tags:
   - Maya Jane Coles
   - Dreamz

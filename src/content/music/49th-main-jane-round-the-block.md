@@ -6,7 +6,6 @@ track: "Round The Block"
 pubDate: 2026-06-26
 spotifyUrl: "https://open.spotify.com/track/5Bxxp1dWac7F4sOI3jK0OG"
 youtubeUrl: "https://www.youtube.com/watch?v=OVn1JBtM4W4"
-heroImage: "/images/music/49th-main-jane-round-the-block.webp"
 tags:
   - 49th & Main
   - Jane

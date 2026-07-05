@@ -14,12 +14,13 @@ const formattedDate = new Intl.DateTimeFormat('de-DE', {
   month: '2-digit',
   year: 'numeric',
 }).format(pubDate);
+const cardImage = heroImage?.startsWith('/assets/img/') ? heroImage : undefined;
 ---
 
-<article class="post-card">
-  {heroImage && (
+<article class="post-card elyshor-post-card">
+  {cardImage && (
     <a class="post-card__image" href={href} aria-label={`${title} öffnen`}>
-      <img src={heroImage} alt="" loading="lazy" />
+      <img src={cardImage} alt="" loading="lazy" />
     </a>
   )}
   <div class="post-card__body">
