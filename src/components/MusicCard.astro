@@ -13,6 +13,7 @@ const date = new Intl.DateTimeFormat('de-DE', {
 }).format(post.data.pubDate);
 const description = [post.data.artist, post.data.track].filter(Boolean).join(' · ') || post.data.description;
 const heroImage = post.data.heroImage?.startsWith('/assets/img/') ? post.data.heroImage : undefined;
+const tags = ['Musik', ...post.data.tags.filter((tag) => tag.toLowerCase() !== 'musik')].slice(0, 5);
 ---
 
 <article class="music-card elyshor-post-card elyshor-post-card--wide">
@@ -26,11 +27,12 @@ const heroImage = post.data.heroImage?.startsWith('/assets/img/') ? post.data.he
       <p>{description}</p>
     </div>
     <ul class="tag-list tag-list--compact" aria-label="Tags">
-      {post.data.tags.slice(0, 5).map((tag) => <li>{tag}</li>)}
+      {tags.map((tag) => <li>{tag}</li>)}
     </ul>
     <div class="button-row">
       {post.data.spotifyUrl && <a class="button button--ghost button--spotify" href={post.data.spotifyUrl} rel="noreferrer">Spotify</a>}
       {post.data.youtubeUrl && <a class="button button--ghost button--youtube" href={post.data.youtubeUrl} rel="noreferrer">YouTube</a>}
+      <a class="button button--ghost" href={`/musik/${post.id}/`}>Beitrag lesen</a>
     </div>
   </div>
 </article>

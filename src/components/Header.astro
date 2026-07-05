@@ -4,7 +4,7 @@ import ThemeToggle from './ThemeToggle.astro';
 const navItems = [
   { href: '/musik/', label: 'Musik' },
   { href: '/wow/', label: 'WoW' },
-  { href: '/powerpuffpeons/', label: 'PowerPuffPeons', sub: true },
+  { href: '/powerpuffpeons/', label: 'PowerPuffPeons' },
   { href: '/setup-technik/', label: 'Setup & Technik' },
   { href: '/links/', label: 'Links' },
 ];
@@ -18,12 +18,57 @@ const navItems = [
 
     <nav class="main-nav site-nav" aria-label="Hauptnavigation">
       {navItems.map((item) => (
-        <a class={item.sub ? 'main-nav__sub' : undefined} href={item.href}>{item.label}</a>
+        <a href={item.href}>{item.label}</a>
       ))}
     </nav>
 
     <div class="site-header__actions">
       <ThemeToggle />
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Menü öffnen"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <nav aria-label="Mobile Navigation">
+        {navItems.map((item) => (
+          <a href={item.href}>{item.label}</a>
+        ))}
+      </nav>
     </div>
   </div>
 </header>
+
+<script>
+  const menuToggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const mobileMenu = document.querySelector<HTMLElement>('#mobile-menu');
+
+  function setMobileMenu(open: boolean) {
+    if (!menuToggle || !mobileMenu) return;
+
+    menuToggle.setAttribute('aria-expanded', String(open));
+    menuToggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+    mobileMenu.hidden = !open;
+    mobileMenu.classList.toggle('is-open', open);
+  }
+
+  menuToggle?.addEventListener('click', () => {
+    setMobileMenu(menuToggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  mobileMenu?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => setMobileMenu(false));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') setMobileMenu(false);
+  });
+</script>

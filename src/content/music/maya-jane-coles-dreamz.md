@@ -4,6 +4,7 @@ description: "Tracknotiz zu Dreamz von Maya Jane Coles."
 artist: "Maya Jane Coles"
 track: "Dreamz"
 pubDate: 2026-06-26
+heroImage: "/assets/img/music/maya-jane-coles-dreamz.webp"
 spotifyUrl: "https://open.spotify.com/track/5KJYdEEiPG8ePDia1FD1hm"
 youtubeUrl: "https://www.youtube.com/watch?v=641JYP4dIaA"
 tags:

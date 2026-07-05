@@ -12,10 +12,7 @@ const posts = (await getCollection('music', ({ data }) => !data.draft))
 <BaseLayout title="Elyshor">
   <LogoHero variant="home" />
 
-  <section class="section elyshor-home-posts">
-    <div class="section__header">
-      <h1>neuste beiträge</h1>
-    </div>
+  <section class="ely-home-posts" aria-label="Aktuelle Beiträge">
     <div class="card-grid ely-post-list ely-post-list--wide">
       {posts.map((post) => <MusicCard post={post} />)}
     </div>

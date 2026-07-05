@@ -4,6 +4,7 @@ description: "Tracknotiz zu Round The Block von 49th & Main und Jane."
 artist: "49th & Main, Jane"
 track: "Round The Block"
 pubDate: 2026-06-26
+heroImage: "/assets/img/music/49th-main-jane-round-the-block.webp"
 spotifyUrl: "https://open.spotify.com/track/5Bxxp1dWac7F4sOI3jK0OG"
 youtubeUrl: "https://www.youtube.com/watch?v=OVn1JBtM4W4"
 tags:
