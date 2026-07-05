@@ -10,17 +10,17 @@ const date = new Intl.DateTimeFormat('de-DE', {
   day: '2-digit',
   month: '2-digit',
   year: 'numeric',
-}).format(post.data.date);
-const description = `${post.data.artist} · ${post.data.track}${post.data.label ? ` · ${post.data.label}` : ''}`;
+}).format(post.data.pubDate);
+const description = [post.data.artist, post.data.track].filter(Boolean).join(' · ') || post.data.description;
 ---
 
 <article class="music-card">
   <a class="music-card__cover" href={`/musik/${post.id}/`} aria-label={`${post.data.title} öffnen`}>
-    {post.data.cover ? <img src={post.data.cover} alt="" loading="lazy" /> : <span>{post.data.track}</span>}
+    {post.data.heroImage ? <img src={post.data.heroImage} alt="" loading="lazy" /> : <span>{post.data.track || post.data.title}</span>}
   </a>
   <div class="music-card__body">
     <div>
-      <time datetime={post.data.date.toISOString()}>{date}</time>
+      <time datetime={post.data.pubDate.toISOString()}>{date}</time>
       <h2><a href={`/musik/${post.id}/`}>{post.data.title}</a></h2>
       <p>{description}</p>
     </div>
@@ -28,8 +28,8 @@ const description = `${post.data.artist} · ${post.data.track}${post.data.label 
       {post.data.tags.slice(0, 5).map((tag) => <li>{tag}</li>)}
     </ul>
     <div class="button-row">
-      <a class="button button--ghost" href={post.data.spotify} rel="noreferrer">Spotify</a>
-      {post.data.youtube && <a class="button button--ghost" href={post.data.youtube} rel="noreferrer">YouTube</a>}
+      {post.data.spotifyUrl && <a class="button button--ghost" href={post.data.spotifyUrl} rel="noreferrer">Spotify</a>}
+      {post.data.youtubeUrl && <a class="button button--ghost" href={post.data.youtubeUrl} rel="noreferrer">YouTube</a>}
     </div>
   </div>
 </article>

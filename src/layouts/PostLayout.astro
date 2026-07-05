@@ -4,39 +4,53 @@ import SpotifyEmbed from '../components/SpotifyEmbed.astro';
 import YouTubeEmbed from '../components/YouTubeEmbed.astro';
 
 interface Props {
+  section: string;
   title: string;
-  date: Date;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
   tags: string[];
-  spotify: string;
-  youtube?: string;
+  spotifyUrl?: string;
+  youtubeUrl?: string;
 }
 
-const { title, date, tags, spotify, youtube } = Astro.props;
+const { section, title, description, pubDate, updatedDate, tags, spotifyUrl, youtubeUrl } = Astro.props;
 const formattedDate = new Intl.DateTimeFormat('de-DE', {
   day: '2-digit',
   month: 'long',
   year: 'numeric',
-}).format(date);
+}).format(pubDate);
+const formattedUpdatedDate = updatedDate && new Intl.DateTimeFormat('de-DE', {
+  day: '2-digit',
+  month: 'long',
+  year: 'numeric',
+}).format(updatedDate);
 ---
 
-<BaseLayout title={`${title} · Elyshor`} description={`${title} auf Elyshor.`}>
+<BaseLayout title={`${title} · Elyshor`} description={description}>
   <article class="post-shell">
     <header class="post-header">
-      <p class="eyebrow">Musik</p>
+      <p class="eyebrow">{section}</p>
       <h1>{title}</h1>
-      <time datetime={date.toISOString()}>{formattedDate}</time>
-      <ul class="tag-list" aria-label="Tags">
-        {tags.map((tag) => <li>{tag}</li>)}
-      </ul>
+      <p>{description}</p>
+      <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+      {formattedUpdatedDate && <p class="post-updated">Aktualisiert am {formattedUpdatedDate}</p>}
+      {tags.length > 0 && (
+        <ul class="tag-list" aria-label="Tags">
+          {tags.map((tag) => <li>{tag}</li>)}
+        </ul>
+      )}
     </header>
 
     <div class="prose">
       <slot />
     </div>
 
-    <section class="embed-stack" aria-label="Externe Medien">
-      <SpotifyEmbed url={spotify} title={title} />
-      {youtube && <YouTubeEmbed url={youtube} title={title} />}
-    </section>
+    {(spotifyUrl || youtubeUrl) && (
+      <section class="embed-stack" aria-label="Externe Medien">
+        {spotifyUrl && <SpotifyEmbed url={spotifyUrl} title={title} />}
+        {youtubeUrl && <YouTubeEmbed url={youtubeUrl} title={title} />}
+      </section>
+    )}
   </article>
 </BaseLayout>

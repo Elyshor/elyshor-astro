@@ -1,23 +1,32 @@
----
+﻿---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import LogoHero from '../../components/LogoHero.astro';
+import PostCard from '../../components/PostCard.astro';
 
-const areas = [
-  { title: 'PowerPuffPeons', text: 'Gilde, Raidnotizen und gemeinsame Projekte.', href: '/powerpuffpeons/' },
-  { title: 'Charaktere', text: 'Platzhalter fuer Profile, Rollen und Builds.', href: '#' },
-  { title: 'Notizen', text: 'Platzhalter fuer spaetere WoW-Beitraege.', href: '#' },
-];
+const posts = (await getCollection('wow', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 ---
 
 <BaseLayout title="WoW · Elyshor" description="World-of-Warcraft-Bereich von Elyshor mit Gilde, Notizen und Platz fuer Builds.">
   <LogoHero variant="page" kicker="WoW" text="Ein ruhiger Bereich fuer World of Warcraft, Gildenleben und spaetere Notizen." />
 
-  <section class="hub-grid" aria-label="WoW-Bereiche">
-    {areas.map((area) => (
-      <a class="hub-card" href={area.href}>
-        <h1>{area.title}</h1>
-        <p>{area.text}</p>
-      </a>
-    ))}
+  <section class="section">
+    <div class="section__header">
+      <h1>WoW-Beitraege</h1>
+      <p>Gildenideen, Spielnotizen und spaetere Updates.</p>
+    </div>
+    <div class="post-card-grid">
+      {posts.map((post) => (
+        <PostCard
+          href={`/wow/${post.id}/`}
+          title={post.data.title}
+          description={post.data.description}
+          pubDate={post.data.pubDate}
+          tags={post.data.tags}
+          heroImage={post.data.heroImage}
+        />
+      ))}
+    </div>
   </section>
 </BaseLayout>

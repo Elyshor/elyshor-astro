@@ -3,7 +3,7 @@ import { getCollection, render } from 'astro:content';
 import PostLayout from '../../layouts/PostLayout.astro';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('music', ({ data }) => !data.draft);
+  const posts = await getCollection('cats', ({ data }) => !data.draft);
 
   return posts.map((post) => ({
     params: { slug: post.id },
@@ -16,14 +16,12 @@ const { Content } = await render(post);
 ---
 
 <PostLayout
-  section="Musik"
+  section="Katzen"
   title={post.data.title}
   description={post.data.description}
   pubDate={post.data.pubDate}
   updatedDate={post.data.updatedDate}
   tags={post.data.tags}
-  spotifyUrl={post.data.spotifyUrl}
-  youtubeUrl={post.data.youtubeUrl}
 >
   <Content />
 </PostLayout>

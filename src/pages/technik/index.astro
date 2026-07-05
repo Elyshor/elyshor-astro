@@ -1,19 +1,32 @@
----
+﻿---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import LogoHero from '../../components/LogoHero.astro';
+import PostCard from '../../components/PostCard.astro';
 
-const topics = ['Hardware', 'Website', 'Tools', 'Bastelprojekte'];
+const posts = (await getCollection('tech', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 ---
 
 <BaseLayout title="Technik · Elyshor" description="Technikbereich von Elyshor mit Platz fuer Hardware, Tools und Website-Notizen.">
   <LogoHero variant="page" kicker="Technik" text="Notizen zu Hardware, Tools, Website-Kram und allem, was noch ausprobiert wird." />
 
-  <section class="hub-grid" aria-label="Technik-Themen">
-    {topics.map((topic) => (
-      <article class="hub-card">
-        <h1>{topic}</h1>
-        <p>Platzhalter fuer spaetere Technikbeitraege.</p>
-      </article>
-    ))}
+  <section class="section">
+    <div class="section__header">
+      <h1>Technikbeitraege</h1>
+      <p>Hardware, Website, Tools und kleine Bastelprojekte.</p>
+    </div>
+    <div class="post-card-grid">
+      {posts.map((post) => (
+        <PostCard
+          href={`/technik/${post.id}/`}
+          title={post.data.title}
+          description={post.data.description}
+          pubDate={post.data.pubDate}
+          tags={post.data.tags}
+          heroImage={post.data.heroImage}
+        />
+      ))}
+    </div>
   </section>
 </BaseLayout>

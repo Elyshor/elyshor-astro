@@ -1,0 +1,35 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  tags?: string[];
+  heroImage?: string;
+}
+
+const { href, title, description, pubDate, tags = [], heroImage } = Astro.props;
+const formattedDate = new Intl.DateTimeFormat('de-DE', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+}).format(pubDate);
+---
+
+<article class="post-card">
+  {heroImage && (
+    <a class="post-card__image" href={href} aria-label={`${title} öffnen`}>
+      <img src={heroImage} alt="" loading="lazy" />
+    </a>
+  )}
+  <div class="post-card__body">
+    <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+    <h2><a href={href}>{title}</a></h2>
+    <p>{description}</p>
+    {tags.length > 0 && (
+      <ul class="tag-list tag-list--compact" aria-label="Tags">
+        {tags.slice(0, 5).map((tag) => <li>{tag}</li>)}
+      </ul>
+    )}
+  </div>
+</article>
