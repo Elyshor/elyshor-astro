@@ -24,60 +24,6 @@ const navItems = [
 
     <div class="site-header__actions">
       <ThemeToggle />
-      <button
-        class="menu-toggle"
-        type="button"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-        aria-label="Menü öffnen"
-      >
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </button>
-    </div>
-
-    <div class="mobile-menu" id="mobile-menu" hidden>
-      <nav aria-label="Mobile Navigation">
-        {navItems.map((item) => (
-          <a href={item.href}>{item.label}</a>
-        ))}
-      </nav>
     </div>
   </div>
 </header>
-
-<script>
-  const menuToggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
-  const mobileMenu = document.querySelector<HTMLElement>('#mobile-menu');
-
-  function setMobileMenu(open: boolean) {
-    if (!menuToggle || !mobileMenu) return;
-
-    menuToggle.setAttribute('aria-expanded', String(open));
-    menuToggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
-    mobileMenu.hidden = !open;
-    mobileMenu.classList.toggle('is-open', open);
-  }
-
-  function updateMobileMenuVisibility() {
-    const visible = window.scrollY >= 72;
-    document.documentElement.classList.toggle('is-mobile-menu-visible', visible);
-    if (!visible) setMobileMenu(false);
-  }
-
-  menuToggle?.addEventListener('click', () => {
-    setMobileMenu(menuToggle.getAttribute('aria-expanded') !== 'true');
-  });
-
-  mobileMenu?.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => setMobileMenu(false));
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') setMobileMenu(false);
-  });
-
-  updateMobileMenuVisibility();
-  window.addEventListener('scroll', updateMobileMenuVisibility, { passive: true });
-</script>

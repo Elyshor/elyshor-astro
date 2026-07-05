@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LogoHero from '../../components/LogoHero.astro';
+import PostCard from '../../components/PostCard.astro';
+import { slugifyTag } from '../../lib/tags';
+
+export async function getStaticPaths() {
+  const sections = {
+    music: { label: 'Musik', href: '/musik/' },
+    wow: { label: 'WoW', href: '/wow/' },
+    tech: { label: 'Technik', href: '/technik/' },
+    cats: { label: 'Katzen', href: '/katzen/' },
+  } as const;
+
+  const [musicPosts, wowPosts, techPosts, catPosts] = await Promise.all([
+    getCollection('music', ({ data }) => !data.draft),
+    getCollection('wow', ({ data }) => !data.draft),
+    getCollection('tech', ({ data }) => !data.draft),
+    getCollection('cats', ({ data }) => !data.draft),
+  ]);
+
+  const posts = [
+    ...musicPosts.map((post) => ({
+      ...post,
+      section: sections.music,
+      href: `/musik/${post.id}/`,
+      meta: [post.data.artist, post.data.track].filter(Boolean).join(' · '),
+      spotifyUrl: post.data.spotifyUrl,
+      youtubeUrl: post.data.youtubeUrl,
+    })),
+    ...wowPosts.map((post) => ({ ...post, section: sections.wow, href: `/wow/${post.id}/`, meta: '' })),
+    ...techPosts.map((post) => ({ ...post, section: sections.tech, href: `/technik/${post.id}/`, meta: '' })),
+    ...catPosts.map((post) => ({ ...post, section: sections.cats, href: `/katzen/${post.id}/`, meta: '' })),
+  ];
+
+  const tags = new Map<string, string>();
+
+  for (const post of posts) {
+    for (const tag of post.data.tags) {
+      const slug = slugifyTag(tag);
+      if (slug && !tags.has(slug)) tags.set(slug, tag);
+    }
+  }
+
+  return [...tags.entries()].map(([slug, label]) => ({
+    params: { tag: slug },
+    props: { tagSlug: slug, tagLabel: label, posts },
+  }));
+}
+
+const { tagSlug, tagLabel, posts } = Astro.props;
+const matchingPosts = posts
+  .filter((post) => post.data.tags.some((tag) => slugifyTag(tag) === tagSlug))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+---
+
+<BaseLayout title={`Tag ${tagLabel} · Elyshor`} description={`Beiträge mit dem Tag ${tagLabel}.`}>
+  <LogoHero variant="page" />
+
+  <section class="section tag-page" aria-labelledby="tag-title">
+    <div class="section__header">
+      <p class="eyebrow">Tag</p>
+      <h1 id="tag-title">{tagLabel}</h1>
+    </div>
+    <div class="post-card-grid ely-post-list ely-post-list--wide">
+      {matchingPosts.map((post) => (
+        <PostCard
+          href={post.href}
+          title={post.data.title}
+          description={post.data.description}
+          pubDate={post.data.pubDate}
+          tags={post.data.tags}
+          heroImage={post.data.heroImage}
+          coverImage={post.data.coverImage}
+          image={post.data.image}
+          albumCover={post.data.albumCover}
+          section={post.section.label}
+          sectionHref={post.section.href}
+          meta={post.meta}
+          spotifyUrl={post.spotifyUrl}
+          youtubeUrl={post.youtubeUrl}
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

@@ -1,5 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import MediaButton from './MediaButton.astro';
+import { tagHref } from '../lib/tags';
 
 interface Props {
   post: CollectionEntry<'music'>;
@@ -12,7 +14,8 @@ const date = new Intl.DateTimeFormat('de-DE', {
   year: 'numeric',
 }).format(post.data.pubDate);
 const description = [post.data.artist, post.data.track].filter(Boolean).join(' · ') || post.data.description;
-const heroImage = post.data.heroImage?.startsWith('/assets/img/') ? post.data.heroImage : undefined;
+const rawImage = post.data.coverImage || post.data.albumCover || post.data.image || post.data.heroImage;
+const heroImage = rawImage?.startsWith('/assets/img/') ? rawImage : undefined;
 const tags = ['Musik', ...post.data.tags.filter((tag) => tag.toLowerCase() !== 'musik')].slice(0, 5);
 ---
 
@@ -28,13 +31,13 @@ const tags = ['Musik', ...post.data.tags.filter((tag) => tag.toLowerCase() !== '
     </div>
     <ul class="tag-list tag-list--compact" aria-label="Tags">
       {tags.map((tag) => (
-        <li>{tag.toLowerCase() === 'musik' ? <a href="/musik/">{tag}</a> : tag}</li>
+        <li>{tag.toLowerCase() === 'musik' ? <a href="/musik/">{tag}</a> : <a href={tagHref(tag)}>{tag}</a>}</li>
       ))}
     </ul>
     <div class="button-row">
-      {post.data.spotifyUrl && <a class="button button--ghost button--spotify" href={post.data.spotifyUrl} rel="noreferrer">Spotify</a>}
-      {post.data.youtubeUrl && <a class="button button--ghost button--youtube" href={post.data.youtubeUrl} rel="noreferrer">YouTube</a>}
-      <a class="button button--ghost" href={`/musik/${post.id}/`}>Beitrag lesen</a>
+      {post.data.spotifyUrl && <MediaButton provider="Spotify" url={post.data.spotifyUrl} />}
+      {post.data.youtubeUrl && <MediaButton provider="YouTube" url={post.data.youtubeUrl} />}
+      <a class="button button--ghost button--read" href={`/musik/${post.id}/`}>Beitrag lesen →</a>
     </div>
   </div>
 </article>

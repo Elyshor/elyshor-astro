@@ -10,6 +10,9 @@ const baseSchema = z.object({
   tags: z.array(z.string()).default([]),
   draft: z.boolean().optional(),
   heroImage: z.string().optional(),
+  coverImage: z.string().optional(),
+  image: z.string().optional(),
+  albumCover: z.string().optional(),
 });
 
 const music = defineCollection({

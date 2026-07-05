@@ -21,6 +21,9 @@ const posts = (await getCollection('cats', ({ data }) => !data.draft))
           pubDate={post.data.pubDate}
           tags={post.data.tags}
           heroImage={post.data.heroImage}
+          coverImage={post.data.coverImage}
+          image={post.data.image}
+          albumCover={post.data.albumCover}
           section="Katzen"
           sectionHref="/katzen/"
         />

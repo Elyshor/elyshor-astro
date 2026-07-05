@@ -1,4 +1,7 @@
 ---
+import MediaButton from './MediaButton.astro';
+import { tagHref } from '../lib/tags';
+
 interface Props {
   href: string;
   title: string;
@@ -6,6 +9,9 @@ interface Props {
   pubDate: Date;
   tags?: string[];
   heroImage?: string;
+  coverImage?: string;
+  image?: string;
+  albumCover?: string;
   section?: string;
   sectionHref?: string;
   meta?: string;
@@ -20,6 +26,9 @@ const {
   pubDate,
   tags = [],
   heroImage,
+  coverImage,
+  image,
+  albumCover,
   section,
   sectionHref,
   meta,
@@ -31,9 +40,9 @@ const formattedDate = new Intl.DateTimeFormat('de-DE', {
   month: '2-digit',
   year: 'numeric',
 }).format(pubDate);
-const cardImage = heroImage?.startsWith('/assets/img/') ? heroImage : undefined;
+const rawImage = coverImage || albumCover || image || heroImage;
+const cardImage = rawImage?.startsWith('/assets/img/') ? rawImage : undefined;
 const displayTags = section ? [section, ...tags.filter((tag) => tag.toLowerCase() !== section.toLowerCase())] : tags;
-const fallbackLabel = section?.slice(0, 2) ?? title.slice(0, 1);
 ---
 
 <article class:list={['post-card elyshor-post-card', { 'post-card--has-image': cardImage }]}>
@@ -50,14 +59,14 @@ const fallbackLabel = section?.slice(0, 2) ?? title.slice(0, 1);
     {displayTags.length > 0 && (
       <ul class="tag-list tag-list--compact" aria-label="Tags">
         {displayTags.slice(0, 5).map((tag) => (
-          <li>{sectionHref && tag === section ? <a href={sectionHref}>{tag}</a> : tag}</li>
+          <li>{sectionHref && tag === section ? <a href={sectionHref}>{tag}</a> : <a href={tagHref(tag)}>{tag}</a>}</li>
         ))}
       </ul>
     )}
     <div class="button-row">
-      {spotifyUrl && <a class="button button--spotify" href={spotifyUrl} rel="noreferrer">Spotify</a>}
-      {youtubeUrl && <a class="button button--youtube" href={youtubeUrl} rel="noreferrer">YouTube</a>}
-      <a class="button button--read" href={href}>Beitrag lesen</a>
+      {spotifyUrl && <MediaButton provider="Spotify" url={spotifyUrl} />}
+      {youtubeUrl && <MediaButton provider="YouTube" url={youtubeUrl} />}
+      <a class="button button--read" href={href}>Beitrag lesen →</a>
     </div>
   </div>
 </article>
