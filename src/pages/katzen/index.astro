@@ -3,8 +3,10 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import LogoHero from '../../components/LogoHero.astro';
 import PostCard from '../../components/PostCard.astro';
+import { hasAnyTag } from '../../lib/tags';
 
 const posts = (await getCollection('cats', ({ data }) => !data.draft))
+  .filter((post) => hasAnyTag(post.data.tags, ['katzen', 'cats']))
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 ---
 
@@ -15,6 +17,8 @@ const posts = (await getCollection('cats', ({ data }) => !data.draft))
     <div class="post-card-grid">
       {posts.map((post) => (
         <PostCard
+          id={post.id}
+          collection="cats"
           href={`/katzen/${post.id}/`}
           title={post.data.title}
           description={post.data.description}
@@ -22,6 +26,11 @@ const posts = (await getCollection('cats', ({ data }) => !data.draft))
           tags={post.data.tags}
           heroImage={post.data.heroImage}
           coverImage={post.data.coverImage}
+          coverAlt={post.data.coverAlt}
+          coverCredit={post.data.coverCredit}
+          coverSourceUrl={post.data.coverSourceUrl}
+          coverProvider={post.data.coverProvider}
+          coverLicense={post.data.coverLicense}
           image={post.data.image}
           albumCover={post.data.albumCover}
           section="Katzen"

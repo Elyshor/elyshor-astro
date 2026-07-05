@@ -1,6 +1,13 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import LogoHero from '../../components/LogoHero.astro';
+import PostCard from '../../components/PostCard.astro';
+import { hasTag } from '../../lib/tags';
+
+const posts = (await getCollection('wow', ({ data }) => !data.draft))
+  .filter((post) => hasTag(post.data.tags, 'powerpuffpeons'))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 ---
 
 <BaseLayout
@@ -16,6 +23,29 @@ import LogoHero from '../../components/LogoHero.astro';
       <h1>Gildenbereich</h1>
       <p>Hier entsteht Platz fuer Gildenbeitraege, Raidnotizen und kleine Updates rund um die PowerPuffPeons.</p>
     </div>
-    <div class="empty-state">Noch keine Beitraege.</div>
+    <div class="post-card-grid">
+      {posts.map((post) => (
+        <PostCard
+          id={post.id}
+          collection="wow"
+          href={`/wow/${post.id}/`}
+          title={post.data.title}
+          description={post.data.description}
+          pubDate={post.data.pubDate}
+          tags={post.data.tags}
+          heroImage={post.data.heroImage}
+          coverImage={post.data.coverImage}
+          coverAlt={post.data.coverAlt}
+          coverCredit={post.data.coverCredit}
+          coverSourceUrl={post.data.coverSourceUrl}
+          coverProvider={post.data.coverProvider}
+          coverLicense={post.data.coverLicense}
+          image={post.data.image}
+          albumCover={post.data.albumCover}
+          section="PowerPuffPeons"
+          sectionHref="/powerpuffpeons/"
+        />
+      ))}
+    </div>
   </section>
 </BaseLayout>

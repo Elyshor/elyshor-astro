@@ -1535,6 +1535,85 @@ html[data-theme='dark'] .logo-hero__mark img {
   }
 }
 
+/* Subtle Elyshor watermark and frosted card refinement */
+.site-main {
+  position: relative;
+  isolation: isolate;
+}
+
+.site-main::before {
+  content: '';
+  position: fixed;
+  inset: auto -8vw 6vh auto;
+  z-index: 0;
+  width: min(58vw, 620px);
+  aspect-ratio: 1;
+  pointer-events: none;
+  background: url('/assets/img/elyshor-logo-transparent-cropped.webp') center / contain no-repeat;
+  opacity: 0.055;
+  filter: blur(1.8px) saturate(0.92);
+  transform: rotate(-4deg);
+}
+
+.site-main > * {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-theme='dark'] .site-main::before {
+  opacity: 0.08;
+  filter: blur(2.2px) saturate(0.8) drop-shadow(0 0 2.4rem rgba(255, 255, 255, 0.08));
+}
+
+.post-card,
+.music-card,
+.elyshor-post-card {
+  border-color: color-mix(in srgb, var(--color-border) 62%, rgba(255, 255, 255, 0.48));
+  background: color-mix(in srgb, var(--color-surface) 82%, transparent);
+  box-shadow: 0 1rem 2.8rem color-mix(in srgb, var(--color-text) 9%, transparent);
+  backdrop-filter: blur(16px) saturate(1.08);
+  -webkit-backdrop-filter: blur(16px) saturate(1.08);
+}
+
+html[data-theme='dark'] .post-card,
+html[data-theme='dark'] .music-card,
+html[data-theme='dark'] .elyshor-post-card {
+  border-color: color-mix(in srgb, var(--color-border) 64%, rgba(255, 255, 255, 0.14));
+  background: color-mix(in srgb, var(--color-surface) 78%, transparent);
+  box-shadow: 0 1rem 2.6rem rgba(0, 0, 0, 0.34);
+}
+
+.media-action,
+.media-button,
+.ely-home-posts .button-row .media-action,
+.ely-home-posts .button-row .media-button {
+  width: 2.625rem;
+  height: 2.625rem;
+  min-width: 2.625rem;
+  min-height: 2.625rem;
+  display: inline-grid;
+  place-items: center;
+}
+
+.media-action .media-button__icon,
+.media-button__icon,
+.ely-home-posts .media-action .media-button__icon {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+@media (max-width: 640px) {
+  .site-main::before {
+    inset: auto -26vw 12vh auto;
+    width: 86vw;
+    opacity: 0.04;
+  }
+
+  html[data-theme='dark'] .site-main::before {
+    opacity: 0.055;
+  }
+}
+
 @media (max-width: 600px) {
   :root {
     --site-header-height: 4rem;
@@ -2818,6 +2897,25 @@ html.is-mobile-menu-visible .menu-toggle {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 0.18em;
+}
+
+.media-action,
+.media-button,
+.ely-home-posts .button-row .media-action,
+.ely-home-posts .button-row .media-button {
+  width: 2.625rem;
+  height: 2.625rem;
+  min-width: 2.625rem;
+  min-height: 2.625rem;
+  display: inline-grid;
+  place-items: center;
+}
+
+.media-action .media-button__icon,
+.media-button__icon,
+.ely-home-posts .media-action .media-button__icon {
+  width: 1.85rem;
+  height: 1.85rem;
 }
 
 @media (max-width: 600px) {

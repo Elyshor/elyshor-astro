@@ -9,6 +9,28 @@ export function slugifyTag(tag: string) {
     .replace(/^-+|-+$/g, '');
 }
 
+export function hasTag(tags: string[] = [], expected: string) {
+  const expectedSlug = slugifyTag(expected);
+  return tags.some((tag) => slugifyTag(tag) === expectedSlug);
+}
+
+export function hasAnyTag(tags: string[] = [], expected: string[]) {
+  return expected.some((tag) => hasTag(tags, tag));
+}
+
 export function tagHref(tag: string) {
-  return `/tags/${slugifyTag(tag)}/`;
+  const slug = slugifyTag(tag);
+  const sectionHrefs: Record<string, string> = {
+    musik: '/musik/',
+    music: '/musik/',
+    wow: '/wow/',
+    powerpuffpeons: '/powerpuffpeons/',
+    setup: '/setup-technik/',
+    technik: '/setup-technik/',
+    tech: '/setup-technik/',
+    katzen: '/katzen/',
+    cats: '/katzen/',
+  };
+
+  return sectionHrefs[slug] || `/tags/${slug}/`;
 }
