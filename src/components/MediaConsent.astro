@@ -18,13 +18,15 @@ const { title, provider, src } = Astro.props;
 
 <script>
   const legacyConsentKey = 'ely_media_consent';
-  const consentKey = 'ely_consent';
+  const legacyCookieConsentKey = 'ely_consent';
+  const consentKey = 'elyshor-cookie-consent';
 
   function hasExternalMediaConsent() {
     if (localStorage.getItem(legacyConsentKey) === 'true') return true;
 
     try {
-      const consent = JSON.parse(localStorage.getItem(consentKey) || '{}');
+      const stored = localStorage.getItem(consentKey) || localStorage.getItem(legacyCookieConsentKey);
+      const consent = JSON.parse(stored || '{}');
       return consent.externalMedia === true;
     } catch {
       return false;
@@ -61,7 +63,7 @@ const { title, provider, src } = Astro.props;
     localStorage.setItem(consentKey, JSON.stringify({
       necessary: true,
       externalMedia: true,
-      decidedAt: new Date().toISOString(),
+      acceptedAt: new Date().toISOString(),
     }));
     document.querySelectorAll<HTMLElement>('[data-media-consent]').forEach(loadConsentEmbed);
     document.dispatchEvent(new CustomEvent('ely-consent-updated'));

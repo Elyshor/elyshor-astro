@@ -8,6 +8,7 @@ const contentRoot = path.join(rootDir, 'src', 'content');
 const generatedDir = path.join(rootDir, 'public', 'assets', 'img', 'covers', 'generated');
 const generatedJsonPath = path.join(rootDir, 'src', 'generated', 'auto-covers.json');
 const collections = ['music', 'wow', 'tech', 'cats'];
+const refresh = process.argv.includes('--refresh');
 
 function loadDotEnv() {
   const envPath = path.join(rootDir, '.env');
@@ -98,28 +99,51 @@ async function readMarkdownFiles(collection) {
 
 function buildQueries(collection, post) {
   const tags = Array.isArray(post.tags) ? post.tags.map((tag) => String(tag).toLowerCase()) : [];
-  const tagText = tags.join(' ');
+  const title = typeof post.title === 'string' ? post.title.toLowerCase() : '';
+  const tagText = `${tags.join(' ')} ${title}`;
+  const hasAny = (needles) => needles.some((needle) => tagText.includes(needle));
 
   if (collection === 'music') {
-    const electronic = ['house', 'techno', 'electronic', 'synth', 'club'].some((tag) => tagText.includes(tag));
-    return electronic
-      ? ['electronic music lights', 'club lights abstract', 'neon music', 'music studio', 'synth lights', 'headphones music']
-      : ['music studio', 'headphones music', 'vinyl record abstract', 'concert lights'];
+    if (hasAny(['dreamz', 'dream', 'ambient', 'chill'])) {
+      return ['dreamy landscape', 'ethereal nature', 'misty forest', 'cinematic landscape'];
+    }
+
+    if (hasAny(['night', 'night creatures'])) {
+      return ['night forest', 'moonlit landscape', 'night landscape', 'cinematic night landscape'];
+    }
+
+    if (hasAny(['young soul', 'soul'])) {
+      return ['warm landscape', 'sunset landscape', 'lonely road sunset', 'mountain lake'];
+    }
+
+    if (hasAny(['house', 'techno', 'electronic', 'synth', 'garage'])) {
+      return ['neon night landscape', 'city lights night', 'cinematic night landscape', 'mountain lake'];
+    }
+
+    return ['dreamy landscape', 'misty forest', 'cinematic landscape', 'sunset landscape', 'ethereal nature'];
   }
 
   if (collection === 'wow') {
-    return ['fantasy landscape', 'fantasy forest', 'medieval tavern', 'fantasy adventure'];
+    if (hasAny(['wow', 'fantasy', 'gilde', 'powerpuffpeons'])) {
+      return ['fantasy landscape', 'misty mountains', 'enchanted forest', 'cinematic landscape'];
+    }
+
+    return ['fantasy landscape', 'misty forest', 'mountain lake', 'enchanted forest'];
   }
 
   if (collection === 'tech') {
-    return ['web development', 'code screen', 'technology abstract', 'computer setup', 'server room'];
+    if (hasAny(['tech', 'setup', 'website', 'astro', 'content'])) {
+      return ['abstract landscape', 'minimal futuristic landscape', 'blue technology landscape', 'cinematic landscape'];
+    }
+
+    return ['abstract dreamy landscape', 'minimal futuristic landscape', 'blue technology landscape'];
   }
 
   if (collection === 'cats') {
-    return ['cozy cat', 'cat home', 'sleepy cat', 'cute cat'];
+    return ['cozy home cat', 'sleepy cat', 'cat home', 'cute cat'];
   }
 
-  return ['abstract background'];
+  return ['abstract dreamy landscape'];
 }
 
 function stableIndex(seed, length) {
@@ -209,7 +233,7 @@ async function main() {
 
       const id = slugify(path.basename(filePath, path.extname(filePath)));
       const existing = entryExists(entries, collection, id);
-      if (existing && publicImageExists(existing.imagePath)) continue;
+      if (!refresh && existing && publicImageExists(existing.imagePath)) continue;
 
       const queries = buildQueries(collection, post);
       const query = queries[stableIndex(`${collection}-${id}-${(post.tags || []).join('-')}`, queries.length)];
@@ -223,7 +247,7 @@ async function main() {
         }
 
         const photo = photos[stableIndex(`${collection}-${id}`, photos.length)];
-        const imageUrl = photo?.src?.large || photo?.src?.medium || photo?.src?.landscape;
+        const imageUrl = photo?.src?.landscape || photo?.src?.large2x || photo?.src?.large || photo?.src?.medium;
         if (!imageUrl) continue;
 
         const fileName = `${collection}-${id}.jpg`;

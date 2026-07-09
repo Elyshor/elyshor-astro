@@ -2,6 +2,8 @@
   if (window.__elyMediaActionsReady) return;
   window.__elyMediaActionsReady = true;
 
+  const CONSENT_KEY = 'elyshor-cookie-consent';
+  const LEGACY_JSON_KEY = 'ely_consent';
   const CONSENT_KEYS = ['elyshor-external-media-consent', 'elyshor-consent-external-media', 'ely_media_consent'];
 
   const escapeHtml = (value) =>
@@ -14,7 +16,7 @@
   const getExternalMediaConsent = () => {
     try {
       if (CONSENT_KEYS.some((key) => localStorage.getItem(key) === 'true')) return true;
-      const storedConsent = localStorage.getItem('ely_consent');
+      const storedConsent = localStorage.getItem(CONSENT_KEY) || localStorage.getItem(LEGACY_JSON_KEY);
       return storedConsent ? JSON.parse(storedConsent).externalMedia === true : false;
     } catch {
       return false;
@@ -25,9 +27,10 @@
     try {
       CONSENT_KEYS.forEach((key) => localStorage.setItem(key, 'true'));
       localStorage.setItem(
-        'ely_consent',
-        JSON.stringify({ necessary: true, externalMedia: true, decidedAt: new Date().toISOString() }),
+        CONSENT_KEY,
+        JSON.stringify({ necessary: true, externalMedia: true, acceptedAt: new Date().toISOString() }),
       );
+      localStorage.removeItem(LEGACY_JSON_KEY);
     } catch {
       // Storage can fail in private modes. The current user gesture still loads the player.
     }
@@ -103,6 +106,10 @@
     player.innerHTML = '';
     const card = getCard(player);
     card?.querySelector('.media-action--youtube')?.setAttribute('aria-expanded', 'false');
+  };
+
+  const closeAllYouTubePlayers = () => {
+    document.querySelectorAll('[data-youtube-player], [data-youtube-panel]').forEach(closeYouTubePlayer);
   };
 
   const renderYouTubeError = (player) => {
@@ -245,6 +252,12 @@
     const youtubeButton = target.closest('.media-action--youtube');
     if (youtubeButton) {
       handleYouTubeClick(event, youtubeButton);
+    }
+  });
+
+  document.addEventListener('ely-consent-updated', (event) => {
+    if (event.detail && event.detail.externalMedia === false) {
+      closeAllYouTubePlayers();
     }
   });
 })();

@@ -3125,3 +3125,55 @@ html.is-mobile-menu-visible .menu-toggle {
     font-size: clamp(0.52rem, 2.15vw, 0.58rem);
   }
 }
+
+/* Consent controls */
+.site-footer nav {
+  flex-wrap: wrap;
+}
+
+.site-footer button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-link);
+  font: inherit;
+  cursor: pointer;
+}
+
+.site-footer button:hover,
+.site-footer button:focus-visible {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.cookie-banner {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem max(1rem, calc((100vw - 1160px) / 2));
+  border: 0;
+  border-top: 1px solid var(--color-card-border);
+  background: color-mix(in srgb, var(--color-card-bg) 96%, transparent);
+  box-shadow: 0 -0.8rem 2rem var(--color-shadow);
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+}
+
+.cookie-banner[hidden] {
+  display: none;
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .cookie-banner {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: min(78vh, 34rem);
+    padding: 0.9rem 0.75rem;
+    overflow: auto;
+  }
+}

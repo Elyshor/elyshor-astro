@@ -6,10 +6,10 @@
     "imagePath": "/assets/img/covers/generated/cats-erster-katzenmoment.jpg",
     "alt": "Erster Katzenmoment - generisches freies Coverbild",
     "provider": "Pexels",
-    "photographer": "Natalia Sevruk",
-    "sourceUrl": "https://www.pexels.com/photo/sleeping-cat-on-street-in-istanbul-turkey-38404712/",
+    "photographer": "Tanya Gorelova",
+    "sourceUrl": "https://www.pexels.com/photo/a-cat-sitting-on-the-grass-3932911/",
     "license": "Pexels License",
-    "query": "sleepy cat"
+    "query": "cat home"
   },
   {
     "id": "49th-main-jane-round-the-block",
@@ -18,10 +18,10 @@
     "imagePath": "/assets/img/covers/generated/music-49th-main-jane-round-the-block.jpg",
     "alt": "49th & Main, Jane - Round The Block - generisches freies Coverbild",
     "provider": "Pexels",
-    "photographer": "Egor Komarov",
-    "sourceUrl": "https://www.pexels.com/photo/close-up-of-headphones-on-a-groovebox-12575727/",
+    "photographer": "Tommes Frites",
+    "sourceUrl": "https://www.pexels.com/photo/scenic-alpine-lake-in-bad-hindelang-bavaria-32989914/",
     "license": "Pexels License",
-    "query": "headphones music"
+    "query": "mountain lake"
   },
   {
     "id": "bad-tuner-young-soul",
@@ -30,10 +30,10 @@
     "imagePath": "/assets/img/covers/generated/music-bad-tuner-young-soul.jpg",
     "alt": "bad tuner - young soul - generisches freies Coverbild",
     "provider": "Pexels",
-    "photographer": "cottonbro studio",
-    "sourceUrl": "https://www.pexels.com/photo/close-up-of-headphones-hanging-on-a-metal-wall-5650531/",
+    "photographer": "Ruslan Sikunov",
+    "sourceUrl": "https://www.pexels.com/photo/sun-over-grasses-on-grassland-at-sunset-18647599/",
     "license": "Pexels License",
-    "query": "music studio"
+    "query": "sunset landscape"
   },
   {
     "id": "maya-jane-coles-dreamz",
@@ -42,10 +42,10 @@
     "imagePath": "/assets/img/covers/generated/music-maya-jane-coles-dreamz.jpg",
     "alt": "Maya Jane Coles - Dreamz - generisches freies Coverbild",
     "provider": "Pexels",
-    "photographer": "TStudio",
-    "sourceUrl": "https://www.pexels.com/photo/close-up-shot-of-an-electronic-synthesizer-8071910/",
+    "photographer": "Zetong Li",
+    "sourceUrl": "https://www.pexels.com/photo/serene-morning-fog-over-rolling-hills-33175695/",
     "license": "Pexels License",
-    "query": "synth lights"
+    "query": "dreamy landscape"
   },
   {
     "id": "astro-content-system",
@@ -54,10 +54,10 @@
     "imagePath": "/assets/img/covers/generated/tech-astro-content-system.jpg",
     "alt": "Astro Content-System - generisches freies Coverbild",
     "provider": "Pexels",
-    "photographer": "Pachon in Motion",
-    "sourceUrl": "https://www.pexels.com/photo/futuristic-digital-abstract-circuitry-design-30547596/",
+    "photographer": "Meriç Tuna",
+    "sourceUrl": "https://www.pexels.com/photo/scenic-view-of-bosphorus-and-istanbul-cityscape-36514564/",
     "license": "Pexels License",
-    "query": "technology abstract"
+    "query": "cinematic landscape"
   },
   {
     "id": "powerpuffpeons-erster-notizzettel",
@@ -66,9 +66,9 @@
     "imagePath": "/assets/img/covers/generated/wow-powerpuffpeons-erster-notizzettel.jpg",
     "alt": "PowerPuffPeons: Erster Notizzettel - generisches freies Coverbild",
     "provider": "Pexels",
-    "photographer": "Juan Felipe Ramírez",
-    "sourceUrl": "https://www.pexels.com/photo/woman-in-halloween-costume-in-fores-14414968/",
+    "photographer": "Engin Akyurt",
+    "sourceUrl": "https://www.pexels.com/photo/serene-mountain-creek-in-a-lush-forest-landscape-38448943/",
     "license": "Pexels License",
-    "query": "fantasy adventure"
+    "query": "cinematic landscape"
   }
 ]
