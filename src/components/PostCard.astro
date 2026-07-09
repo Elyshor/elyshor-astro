@@ -1,6 +1,7 @@
 ---
 import MediaButton from './MediaButton.astro';
 import { getCoverForPost } from '../lib/covers';
+import { getCardGradientStyle } from '../lib/cardGradients';
 import { tagHref } from '../lib/tags';
 
 interface Props {
@@ -87,9 +88,15 @@ function getYouTubeId(webUrl?: string) {
 }
 
 const youtubeId = getYouTubeId(youtubeUrl);
+const cardStyle = getCardGradientStyle({
+  collection,
+  tags: displayTags,
+  title,
+  track: meta,
+});
 ---
 
-<article class:list={['post-card elyshor-post-card', { 'post-card--has-image': cardImage }]} data-media-card>
+<article class:list={['post-card elyshor-post-card', { 'post-card--has-image': cardImage }]} style={cardStyle} data-media-card>
   {cardImage && (
     <a class="post-card__image" href={href} aria-label={`${title} öffnen`}>
       <img src={cardImage} alt={cover.alt} loading="lazy" />

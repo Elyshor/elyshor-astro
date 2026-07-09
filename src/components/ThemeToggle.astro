@@ -1,15 +1,27 @@
-<button class="theme-toggle" type="button" aria-label="Farbschema wechseln" title="Farbschema wechseln">
-  <span class="theme-toggle__sun" aria-hidden="true">☼</span>
-  <span class="theme-toggle__moon" aria-hidden="true">☾</span>
+<button class="theme-toggle" type="button" aria-label="Farbschema wechseln" aria-pressed="false" title="Farbschema wechseln">
+  <span class="theme-toggle__track" aria-hidden="true">
+    <span class="theme-toggle__stars"></span>
+    <span class="theme-toggle__thumb">
+      <span class="theme-toggle__orb"></span>
+    </span>
+  </span>
 </button>
 
 <script>
   const toggle = document.querySelector<HTMLButtonElement>('.theme-toggle');
+
+  function syncThemeToggle() {
+    if (!toggle) return;
+    toggle.setAttribute('aria-pressed', document.documentElement.dataset.theme === 'dark' ? 'true' : 'false');
+  }
+
+  syncThemeToggle();
 
   toggle?.addEventListener('click', () => {
     const html = document.documentElement;
     const nextTheme = html.dataset.theme === 'light' ? 'dark' : 'light';
     html.dataset.theme = nextTheme;
     localStorage.setItem('ely_theme', nextTheme);
+    syncThemeToggle();
   });
 </script>

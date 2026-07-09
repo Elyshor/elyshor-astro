@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import MediaButton from './MediaButton.astro';
 import { getCoverForPost } from '../lib/covers';
+import { getCardGradientStyle } from '../lib/cardGradients';
 import { tagHref } from '../lib/tags';
 
 interface Props {
@@ -35,9 +36,16 @@ function getYouTubeId(webUrl?: string) {
 }
 
 const youtubeId = getYouTubeId(post.data.youtubeUrl);
+const cardStyle = getCardGradientStyle({
+  collection: 'music',
+  tags,
+  title: post.data.title,
+  artist: post.data.artist,
+  track: post.data.track,
+});
 ---
 
-<article class="music-card elyshor-post-card elyshor-post-card--wide" data-media-card>
+<article class="music-card elyshor-post-card elyshor-post-card--wide" style={cardStyle} data-media-card>
   <a class="music-card__cover" href={`/musik/${post.id}/`} aria-label={`${post.data.title} öffnen`}>
     {cover.image ? <img src={cover.image} alt={cover.alt} loading="lazy" /> : <span aria-hidden="true">♪</span>}
   </a>
