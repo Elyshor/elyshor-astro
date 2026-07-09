@@ -1,27 +1,134 @@
-<button class="theme-toggle" type="button" aria-label="Farbschema wechseln" aria-pressed="false" title="Farbschema wechseln">
-  <span class="theme-toggle__track" aria-hidden="true">
-    <span class="theme-toggle__stars"></span>
-    <span class="theme-toggle__thumb">
-      <span class="theme-toggle__orb"></span>
+<button
+  type="button"
+  class="theme-switch"
+  data-theme-switch
+  data-visual-theme="dark"
+  role="switch"
+  aria-checked="true"
+  aria-label="Darstellung wechseln"
+>
+  <span class="theme-switch__track" data-theme-track aria-hidden="true">
+    <span class="theme-switch__clouds"></span>
+    <span class="theme-switch__stars"></span>
+
+    <span class="theme-switch__orb" data-theme-orb>
+      <span class="theme-switch__sun" data-theme-sun></span>
+      <span class="theme-switch__moon" data-theme-moon></span>
     </span>
   </span>
 </button>
 
 <script>
-  const toggle = document.querySelector<HTMLButtonElement>('.theme-toggle');
+  const button = document.querySelector<HTMLButtonElement>('[data-theme-switch]');
+  const orb = button?.querySelector<HTMLElement>('[data-theme-orb]');
+  const sun = button?.querySelector<HTMLElement>('[data-theme-sun]');
+  const moon = button?.querySelector<HTMLElement>('[data-theme-moon]');
 
-  function syncThemeToggle() {
-    if (!toggle) return;
-    toggle.setAttribute('aria-pressed', document.documentElement.dataset.theme === 'dark' ? 'true' : 'false');
+  if (button && orb && sun && moon) {
+    const DURATION = 1000;
+    let animating = false;
+
+    const getTheme = () => {
+      const saved = localStorage.getItem('elyshor-theme') || localStorage.getItem('ely_theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+
+      const htmlTheme = document.documentElement.dataset.theme;
+      if (htmlTheme === 'light' || htmlTheme === 'dark') return htmlTheme;
+
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+
+    const setPageTheme = (theme: 'light' | 'dark') => {
+      document.documentElement.dataset.theme = theme;
+      localStorage.setItem('elyshor-theme', theme);
+      localStorage.setItem('ely_theme', theme);
+      button.setAttribute('aria-checked', theme === 'dark' ? 'true' : 'false');
+    };
+
+    const setVisualFinal = (theme: 'light' | 'dark') => {
+      button.dataset.visualTheme = theme;
+      orb.style.transform = '';
+      sun.style.opacity = '';
+      moon.style.opacity = '';
+    };
+
+    const initial = getTheme();
+    setPageTheme(initial);
+    setVisualFinal(initial);
+
+    button.addEventListener('click', async () => {
+      if (animating) return;
+      animating = true;
+
+      const from = button.dataset.visualTheme === 'dark' ? 'dark' : 'light';
+      const to = from === 'dark' ? 'light' : 'dark';
+
+      setPageTheme(to);
+      button.dataset.visualTheme = from;
+
+      orb.getAnimations().forEach((animation) => animation.cancel());
+      sun.getAnimations().forEach((animation) => animation.cancel());
+      moon.getAnimations().forEach((animation) => animation.cancel());
+
+      const orbFrames = from === 'light'
+        ? [
+            { transform: 'translate3d(41px, -50%, 0) rotate(0deg) scale(1)' },
+            { transform: 'translate3d(23px, -50%, 0) rotate(180deg) scale(.88)', offset: 0.5 },
+            { transform: 'translate3d(5px, -50%, 0) rotate(360deg) scale(1)' },
+          ]
+        : [
+            { transform: 'translate3d(5px, -50%, 0) rotate(0deg) scale(1)' },
+            { transform: 'translate3d(23px, -50%, 0) rotate(180deg) scale(.88)', offset: 0.5 },
+            { transform: 'translate3d(41px, -50%, 0) rotate(360deg) scale(1)' },
+          ];
+
+      const sunFrames = from === 'light'
+        ? [
+            { opacity: 1 },
+            { opacity: 1, offset: 0.35 },
+            { opacity: 0, offset: 0.65 },
+            { opacity: 0 },
+          ]
+        : [
+            { opacity: 0 },
+            { opacity: 0, offset: 0.35 },
+            { opacity: 1, offset: 0.65 },
+            { opacity: 1 },
+          ];
+
+      const moonFrames = from === 'light'
+        ? [
+            { opacity: 0 },
+            { opacity: 0, offset: 0.35 },
+            { opacity: 1, offset: 0.65 },
+            { opacity: 1 },
+          ]
+        : [
+            { opacity: 1 },
+            { opacity: 1, offset: 0.35 },
+            { opacity: 0, offset: 0.65 },
+            { opacity: 0 },
+          ];
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const options = {
+        duration: reducedMotion ? 1 : DURATION,
+        easing: 'cubic-bezier(.22, 1, .36, 1)',
+        fill: 'forwards' as FillMode,
+      };
+
+      const orbAnimation = orb.animate(orbFrames, options);
+      sun.animate(sunFrames, { duration: options.duration, easing: 'ease', fill: 'forwards' });
+      moon.animate(moonFrames, { duration: options.duration, easing: 'ease', fill: 'forwards' });
+
+      try {
+        await orbAnimation.finished;
+      } catch {
+        // Animation cancellation is harmless here.
+      }
+
+      setVisualFinal(to);
+      animating = false;
+    });
   }
-
-  syncThemeToggle();
-
-  toggle?.addEventListener('click', () => {
-    const html = document.documentElement;
-    const nextTheme = html.dataset.theme === 'light' ? 'dark' : 'light';
-    html.dataset.theme = nextTheme;
-    localStorage.setItem('ely_theme', nextTheme);
-    syncThemeToggle();
-  });
 </script>

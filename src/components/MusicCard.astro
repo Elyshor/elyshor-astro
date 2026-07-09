@@ -15,7 +15,9 @@ const date = new Intl.DateTimeFormat('de-DE', {
   month: '2-digit',
   year: 'numeric',
 }).format(post.data.pubDate);
-const description = [post.data.artist, post.data.track].filter(Boolean).join(' · ') || post.data.description;
+const cardTitle = post.data.track || post.data.title;
+const cardMeta = post.data.artist || '';
+const cardDescription = cardMeta || post.data.description;
 const cover = getCoverForPost('music', post.id, post.data);
 const tags = ['Musik', ...post.data.tags.filter((tag) => tag.toLowerCase() !== 'musik')].slice(0, 5);
 
@@ -59,8 +61,8 @@ const cardStyle = getCardGradientStyle({
           ))}
         </ul>
       </div>
-      <h2><a href={`/musik/${post.id}/`}>{post.data.title}</a></h2>
-      <p>{description}</p>
+      <h2><a href={`/musik/${post.id}/`}>{cardTitle}</a></h2>
+      {cardDescription && <p>{cardDescription}</p>}
     </div>
     <div class="button-row">
       {post.data.spotifyUrl && <MediaButton provider="Spotify" url={post.data.spotifyUrl} />}

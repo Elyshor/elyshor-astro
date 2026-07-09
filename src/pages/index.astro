@@ -24,7 +24,8 @@ const posts = [
     collection: 'music',
     section: sections.music,
     href: `/musik/${post.id}/`,
-    meta: [post.data.artist, post.data.track].filter(Boolean).join(' · '),
+    cardTitle: post.data.track || post.data.title,
+    meta: post.data.artist || '',
     spotifyUrl: post.data.spotifyUrl,
     youtubeUrl: post.data.youtubeUrl,
   })),
@@ -44,7 +45,7 @@ const posts = [
           id={post.id}
           collection={post.collection}
           href={post.href}
-          title={post.data.title}
+          title={post.cardTitle ?? post.data.title}
           description={post.data.description}
           pubDate={post.data.pubDate}
           tags={post.data.tags}
